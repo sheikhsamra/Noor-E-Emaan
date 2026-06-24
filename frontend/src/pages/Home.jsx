@@ -1,120 +1,294 @@
 import React, { useEffect, useState } from 'react';
-import API from '../api/axios';
+import { Helmet } from 'react-helmet-async';
 import ProductCard from '../components/ProductCard';
 import { Link } from 'react-router-dom';
-import { allProducts } from '../api/dummyData';
+import CustomerGalleryBanner from "../components/CustomerGalleryBanner";
+import AnimateOnScroll from '../components/AnimateOnScroll';
+import API from '../api/axios';
+import {
+  HiOutlineShieldCheck,
+  HiOutlineTruck,
+  HiOutlineSparkles,
+} from "react-icons/hi2";
 
 const Home = () => {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const normalize = (value) =>
+    value?.toString().toLowerCase().trim();
 
   useEffect(() => {
-    API.get('/products')
-      .then(res => {
-        if (Array.isArray(res.data) && res.data.length > 0) {
-          setProducts(res.data);
-        } else {
-          setProducts(allProducts);
-        }
-      })
-      .catch(err => {
-        console.error("Fetch error:", err);
-        setProducts(allProducts);
-      });
+    setLoading(true);
+    API.get('/products?limit=100')
+      .then(res => setProducts(res.data.products || []))
+      .catch(() => setProducts([]))
+      .finally(() => setLoading(false));
   }, []);
 
-  const abayas = products.filter(p => p.category === 'Abaya').slice(0, 4);
-  const jubbas = products.filter(p => p.category === 'Jubba').slice(0, 4);
-  const essentials = products.filter(p => ['Topi', 'Tasbih', 'Jainamaz'].includes(p.category)).slice(0, 4);
+  const categories = [
+    { id: 'Abaya', title: 'Premium Abaya', subtitle: 'Exquisite Modesty' },
+    { id: 'Jubba', title: 'Royal Jubba', subtitle: 'Traditional Heritage' },
+    { id: 'Topi', title: 'Premium Topi', subtitle: 'Traditional Style' },
+    { id: 'Jainamaz', title: 'Luxury Jainamaz', subtitle: 'Divine Comfort' },
+    { id: 'Tasbih', title: 'Handcrafted Tasbih', subtitle: 'Spiritual Dhikr' },
+    { id: 'Books', title: 'Islamic Books', subtitle: 'Divine Knowledge' },
+    { id: 'Fragrances', title: 'Premium Attar', subtitle: 'Sacred Fragrance' },
+  ];
+
+  const heroSlides = [
+    {
+      image: "/banner/bg1.png",
+      title: "Elegance & Faith Combined",
+      highlight: "Faith",
+      desc: "Discover premium Islamic products crafted for your spiritual and modern lifestyle.",
+      bg: "from-[#F7F2EC] via-[#EEDFD4] to-[#DCC8B8]",
+      text: "text-[#3F312B]",
+      highlightColor: "text-[#9C6B4F]",
+      primaryBtn: "bg-[#8A5A44] text-white hover:bg-[#6F4736]",
+      secondaryBtn: "border border-[#8A5A44] text-[#8A5A44] hover:bg-[#8A5A44]/10",
+      circle: "bg-[#D8B9A5]",
+    },
+    {
+      image: "/banner/bg2.png",
+      title: "Modesty With Modern Grace",
+      highlight: "Grace",
+      desc: "Beautiful abayas, hijabs and modest fashion for everyday elegance.",
+      bg: "from-[#EEF2F7] via-[#DDE7F4] to-[#CBD7EB]",
+      text: "text-[#1F2D44]",
+      highlightColor: "text-[#274C77]",
+      primaryBtn: "bg-[#274C77] text-white hover:bg-[#1D3B5C]",
+      secondaryBtn: "border border-[#274C77] text-[#274C77] hover:bg-[#274C77]/10",
+      circle: "bg-[#9CB7D8]",
+    },
+    {
+      image: "/banner/bg3.png",
+      title: "Premium Islamic Wear",
+      highlight: "Wear",
+      desc: "Elegant jubbas designed for comfort, simplicity and timeless modest style.",
+      bg: "from-[#FAFAF8] via-[#F3F1ED] to-[#E8E3DB]",
+      text: "text-[#444444]",
+      highlightColor: "text-[#8A6A3E]",
+      primaryBtn: "bg-[#8A6A3E] text-white hover:bg-[#6E5432]",
+      secondaryBtn: "border border-[#8A6A3E] text-[#8A6A3E] hover:bg-[#8A6A3E]/10",
+      circle: "bg-[#D9C8A7]",
+    },
+    {
+      image: "/banner/bg4.png",
+      title: "Traditional Topi Collection",
+      highlight: "Topi",
+      desc: "Explore premium topis in elegant neutral shades for everyday spiritual style.",
+      bg: "from-[#EEF1EC] via-[#DFE6DD] to-[#CED9CF]",
+      text: "text-[#324236]",
+      highlightColor: "text-[#556B2F]",
+      primaryBtn: "bg-[#556B2F] text-white hover:bg-[#445623]",
+      secondaryBtn: "border border-[#556B2F] text-[#556B2F] hover:bg-[#556B2F]/10",
+      circle: "bg-[#AAB89F]",
+    },
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 3000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   return (
-    <div className="pb-20">
-      {/* Hero Section */}
-      <section className="bg-primary text-white py-20 lg:py-32 mb-16 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-1/3 h-full bg-accent/10 rounded-l-full transform translate-x-1/2 -rotate-12"></div>
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent/5 rounded-full transform -translate-x-1/2 translate-y-1/2"></div>
-        
-        <div className="container-custom relative z-10 text-center lg:text-left">
-          <div className="max-w-3xl">
-            <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-tight">
-              Elegance & <span className="text-accent">Faith</span> Combined
-            </h1>
-            <p className="text-xl md:text-2xl opacity-90 mb-10 max-w-2xl leading-relaxed">
-              Discover our curated collection of high-quality Islamic products, crafted for your spiritual and modern lifestyle.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-5 justify-center lg:justify-start">
-              <Link to="/products" className="btn-accent text-primary px-10 py-4 text-lg">Shop Collection</Link>
-              <Link to="/categories" className="btn-primary border border-white/30 px-10 py-4 text-lg">Browse Categories</Link>
+    <div className="pb-20 bg-background">
+      <Helmet>
+        <title>Noor-E-Emaan | Premium Islamic Store Pakistan</title>
+        <meta name="description" content="Shop premium Islamic clothing, prayer accessories, books and fragrances. Authentic products delivered across Pakistan." />
+        <meta property="og:title" content="Noor-E-Emaan | Premium Islamic Store" />
+        <meta property="og:description" content="Abayas, Jubbas, Prayer accessories, Books and Fragrances." />
+      </Helmet>
+
+      {/* Hero Section  */}
+
+      <section
+        className={`relative max-w-screen-2xl mx-auto pt-28 pb-16 sm:pb-20 lg:py-24 overflow-hidden bg-gradient-to-br ${heroSlides[currentSlide].bg} ${heroSlides[currentSlide].text}`}
+      >
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_35%,rgba(255,255,255,0.7),transparent_35%)]"></div>
+
+        <div className="container-custom relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] items-center gap-8 sm:gap-10 lg:gap-14">
+
+            <div key={currentSlide} className="text-center lg:text-left animate-bannerText order-2 lg:order-1">
+              <span
+                className={`inline-flex mb-4 sm:mb-5 px-4 sm:px-5 py-2 rounded-full text-[10px] sm:text-xs lg:text-sm font-black tracking-[0.18em] sm:tracking-[0.25em] uppercase bg-white/45 border border-white/60 backdrop-blur-md ${heroSlides[currentSlide].highlightColor}`}
+              >
+                Premium Islamic Store
+              </span>
+
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black mb-5 sm:mb-7 leading-[0.98] tracking-tighter">
+                {heroSlides[currentSlide].title.replace(heroSlides[currentSlide].highlight, "")}
+                <span className={`${heroSlides[currentSlide].highlightColor} italic`}>
+                  {heroSlides[currentSlide].highlight}
+                </span>
+              </h1>
+
+              <p className="text-base sm:text-lg md:text-xl opacity-80 mb-7 sm:mb-9 max-w-xl mx-auto lg:mx-0 leading-relaxed font-medium">
+                {heroSlides[currentSlide].desc}
+              </p>
+
+              <div className="flex flex-col xs:flex-row sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
+                <Link
+                  to="/products"
+                  className={`${heroSlides[currentSlide].primaryBtn} px-7 sm:px-9 py-3.5 sm:py-4 text-base sm:text-lg font-black rounded-full shadow-xl hover:scale-105 transition-all duration-300`}
+                >
+                  Shop Collection
+                </Link>
+
+                <Link
+                  to="/categories"
+                  className={`${heroSlides[currentSlide].secondaryBtn} px-7 sm:px-9 py-3.5 sm:py-4 text-base sm:text-lg font-black rounded-full bg-white/30 backdrop-blur-md transition-all duration-300`}
+                >
+                  Browse Categories
+                </Link>
+              </div>
+            </div>
+
+            <div className="relative flex justify-center lg:justify-end [perspective:1600px] order-1 lg:order-2">
+              <div
+                className={`absolute top-1/2 left-1/2 h-[260px] w-[260px] sm:h-[380px] sm:w-[380px] lg:h-[520px] lg:w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full ${heroSlides[currentSlide].circle} opacity-45 blur-3xl`}
+              ></div>
+
+              <div className="absolute right-4 top-8 hidden lg:block h-[420px] w-[420px] rounded-[3rem] bg-white/25 backdrop-blur-md rotate-6 border border-white/40"></div>
+
+              <div className="relative z-10 w-full max-w-[330px] sm:max-w-[430px] md:max-w-[520px] lg:max-w-[640px] h-[310px] sm:h-[420px] md:h-[500px] lg:h-[650px] flex items-end justify-center">
+                <img
+                  key={currentSlide}
+                  src={heroSlides[currentSlide].image}
+                  alt="Islamic Fashion"
+                  className="h-full w-full object-contain drop-shadow-[0_25px_35px_rgba(0,0,0,0.22)] animate-pageFlip"
+                />
+              </div>
+
+              <div className="absolute -bottom-2 sm:bottom-2 left-1/2 -translate-x-1/2 flex gap-2 sm:gap-3 z-20 rounded-full bg-white/40 backdrop-blur-md px-3 sm:px-4 py-2.5 sm:py-3 border border-white/60">
+                {heroSlides.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentSlide(index)}
+                    className={`h-2.5 sm:h-3 rounded-full transition-all duration-500 ${currentSlide === index
+                        ? `w-8 sm:w-10 ${heroSlides[currentSlide].circle}`
+                        : "w-2.5 sm:w-3 bg-white/90"
+                      }`}
+                  ></button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Category Section: Abayas */}
-      <section className="container-custom mb-20">
-        <div className="flex justify-between items-end mb-10 border-b border-gray-100 pb-4">
-          <div>
-            <h2 className="text-3xl font-bold text-gray-800">Premium Abayas</h2>
-            <p className="text-gray-500 mt-1">Elegant and modest designs for every occasion.</p>
-          </div>
-          <Link to="/products?category=Abaya" className="text-primary font-bold hover:text-accent transition-colors">See All Abayas →</Link>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {abayas.map(product => (
-            <ProductCard key={product._id} product={product} />
-          ))}
-        </div>
-      </section>
 
-      {/* Category Section: Jubbas */}
-      <section className="container-custom mb-20">
-        <div className="flex justify-between items-end mb-10 border-b border-gray-100 pb-4">
-          <div>
-            <h2 className="text-3xl font-bold text-gray-800">Traditional Jubbas</h2>
-            <p className="text-gray-500 mt-1">Classic thobes crafted for comfort and grace.</p>
-          </div>
-          <Link to="/products?category=Jubba" className="text-primary font-bold hover:text-accent transition-colors">See All Jubbas →</Link>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {jubbas.map(product => (
-            <ProductCard key={product._id} product={product} />
-          ))}
-        </div>
-      </section>
+      {/* card section */}
 
-      {/* Category Section: Essentials */}
-      <section className="container-custom mb-20">
-        <div className="flex justify-between items-end mb-10 border-b border-gray-100 pb-4">
-          <div>
-            <h2 className="text-3xl font-bold text-gray-800">Spiritual Essentials</h2>
-            <p className="text-gray-500 mt-1">Prayer mats, tasbihs, and caps for your daily dhikr.</p>
-          </div>
-          <Link to="/categories" className="text-primary font-bold hover:text-accent transition-colors">View All Essentials →</Link>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {essentials.map(product => (
-            <ProductCard key={product._id} product={product} />
-          ))}
-        </div>
-      </section>
+      {categories.map((cat) => {
+        const categoryProducts = products
+          .filter((product) => normalize(product.category) === normalize(cat.id))
+          .slice(0, 4);
 
-      {/* Trust Section */}
-      <section className="bg-white py-20 border-y border-gray-100">
-        <div className="container-custom">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            {[
-              { icon: "✨", title: "Premium Quality", desc: "Every item is hand-picked and verified for authentic quality and durability." },
-              { icon: "🚚", title: "Global Delivery", desc: "Safe, fast, and secure shipping to customers all over the world." },
-              { icon: "🔒", title: "Secure Checkout", desc: "Your transactions are protected with industry-leading security standards." },
-            ].map((item, i) => (
-              <div key={i} className="text-center group">
-                <div className="text-5xl mb-6 transform group-hover:scale-110 transition-transform duration-300">{item.icon}</div>
-                <h3 className="font-bold text-xl mb-3 text-gray-800 uppercase tracking-wide">{item.title}</h3>
-                <p className="text-gray-600 leading-relaxed">{item.desc}</p>
+        const delays = ["", "delay-100", "delay-200", "delay-300"];
+
+        return (
+          <section key={cat.id} className="container-custom mb-24">
+            <AnimateOnScroll variant="fadeLeft">
+              <div className="flex justify-between items-end mb-10 border-b-2 border-cream pb-6">
+                <div>
+                  <span className="text-accent font-black tracking-widest uppercase text-xs">
+                    {cat.subtitle}
+                  </span>
+                  <h2 className="text-4xl font-black text-gray-900 mt-1">
+                    {cat.title}
+                  </h2>
+                </div>
+                <Link
+                  to={`/products?category=${cat.id}`}
+                  className="text-primary font-black uppercase text-xs tracking-widest border-b-2 border-accent pb-1 hover:text-accent transition-all"
+                >
+                  View All {cat.id} →
+                </Link>
               </div>
+            </AnimateOnScroll>
+
+            {loading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="aspect-[4/5] bg-gray-100 animate-pulse rounded-[2rem]" />
+                ))}
+              </div>
+            ) : categoryProducts.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+                {categoryProducts.map((product, idx) => (
+                  <AnimateOnScroll key={product._id} variant="fadeUp" delay={delays[idx] || ""}>
+                    <ProductCard product={product} />
+                  </AnimateOnScroll>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-20 bg-cream/5 rounded-[2rem] border-2 border-dashed border-cream">
+                <p className="text-gray-400 font-bold italic">
+                  No Products Available in {cat.id}
+                </p>
+              </div>
+            )}
+          </section>
+        );
+      })}
+
+            {/* Customer Gallery Banner */}
+<CustomerGalleryBanner />
+
+      <section className="bg-cream/20 py-24 border-y border-cream/50 shadow-inner">
+        <div className="container-custom">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
+            {[
+              {
+                icon: <HiOutlineSparkles />,
+                title: "Premium Quality",
+                desc: "Every item is hand-picked and verified for authentic quality and durability.",
+              },
+              {
+                icon: <HiOutlineTruck />,
+                title: "Fast Delivery",
+                desc: "Safe, fast and secure shipping to customers all over the world.",
+              },
+              {
+                icon: <HiOutlineShieldCheck />,
+                title: "Secure Shopping",
+                desc: "Your transactions are protected with industry-leading security standards.",
+              },
+            ].map((item, i) => (
+              <AnimateOnScroll key={i} variant="scaleUp" delay={["", "delay-150", "delay-300"][i]}>
+              <div
+                className="text-center group bg-white p-10 flex flex-col gap-5  rounded-[3rem] shadow-premium hover:shadow-2xl transition-all duration-500 border border-cream/50"
+              >
+                <div className="mx-auto h-20 w-20 rounded-full bg-gradient-to-br from-[#F7F2EC] to-[#D8B9A5] flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
+
+                  <span className="text-4xl text-[#8A5A44] group-hover:text-[#6F4736] transition-all duration-500 ">
+                    {item.icon}
+                  </span>
+
+                </div>
+
+                <h3 className="font-black text-2xl mb-4 text-primary uppercase tracking-tighter leading-none">
+                  {item.title}
+                </h3>
+
+                <p className="text-gray-500 leading-relaxed font-medium">
+                  {item.desc}
+                </p>
+              </div>
+              </AnimateOnScroll>
             ))}
           </div>
         </div>
       </section>
+
+
     </div>
   );
 };

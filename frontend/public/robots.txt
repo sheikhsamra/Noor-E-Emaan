@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /cart
+Disallow: /checkout
+Disallow: /wishlist
+Disallow: /api/
+
+Sitemap: https://your-domain.com/sitemap.xml

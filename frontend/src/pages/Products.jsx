@@ -1,112 +1,210 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useLocation } from 'react-router-dom';
-import API from '../api/axios';
 import ProductCard from '../components/ProductCard';
-import { allProducts } from '../api/dummyData';
+import AnimateOnScroll from '../components/AnimateOnScroll';
+import API from '../api/axios';
+
+const CATEGORIES = ['All', 'Abaya', 'Jubba', 'Topi', 'Tasbih', 'Jainamaz', 'Fragrances', 'Books'];
 
 const Products = () => {
   const { search: urlSearch } = useLocation();
-  const queryParams = new URLSearchParams(urlSearch);
-  const categoryParam = queryParams.get('category');
+  const categoryParam = new URLSearchParams(urlSearch).get('category');
 
   const [products, setProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [pagination, setPagination] = useState({ page: 1, totalPages: 1, totalProducts: 0 });
   const [search, setSearch] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(categoryParam || 'All');
+  const [sort, setSort] = useState('newest');
+  const [page, setPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  const categories = ['All', 'Abaya', 'Jubba', 'Topi', 'Tasbih', 'Jainamaz', 'Fragrances', 'Books'];
+  const debounceRef = useRef(null);
 
+  const fetchProducts = useCallback(async (searchVal, category, sortVal, pageVal) => {
+    setLoading(true);
+    setError('');
+    try {
+      const params = new URLSearchParams({ sort: sortVal, page: pageVal, limit: 12 });
+      if (searchVal.trim()) params.set('search', searchVal.trim());
+      if (category !== 'All') params.set('category', category);
+
+      const res = await API.get(`/products?${params}`);
+      setProducts(res.data.products);
+      setPagination(res.data.pagination);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to load products. Please try again.');
+      setProducts([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // Sync URL category param on navigation (e.g. from Home page category click)
   useEffect(() => {
     if (categoryParam) {
       setSelectedCategory(categoryParam);
+      setPage(1);
     }
   }, [categoryParam]);
 
+  // Debounce search; fire immediately for category/sort/page changes
   useEffect(() => {
-    API.get('/products')
-      .then(res => {
-        if (Array.isArray(res.data) && res.data.length > 0) {
-          setProducts(res.data);
-          setFilteredProducts(res.data);
-        } else {
-          setProducts(allProducts);
-          setFilteredProducts(allProducts);
-        }
-      })
-      .catch(err => {
-        console.error("Fetch error:", err);
-        setProducts(allProducts);
-        setFilteredProducts(allProducts);
-      });
-  }, []);
+    clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      fetchProducts(search, selectedCategory, sort, page);
+    }, search ? 400 : 0);
+    return () => clearTimeout(debounceRef.current);
+  }, [search, selectedCategory, sort, page, fetchProducts]);
 
-  useEffect(() => {
-    let result = products;
-
-    if (selectedCategory !== 'All') {
-      result = result.filter(p => p.category?.toLowerCase() === selectedCategory.toLowerCase());
-    }
-
-    if (search) {
-      result = result.filter(p => 
-        p.name.toLowerCase().includes(search.toLowerCase()) || 
-        p.description?.toLowerCase().includes(search.toLowerCase())
-      );
-    }
-
-    setFilteredProducts(result);
-  }, [search, selectedCategory, products]);
+  const handleSearch = (val) => { setSearch(val); setPage(1); };
+  const handleCategory = (val) => { setSelectedCategory(val); setPage(1); };
+  const handleSort = (val) => { setSort(val); setPage(1); };
+  const clearFilters = () => { setSearch(''); setSelectedCategory('All'); setSort('newest'); setPage(1); };
 
   return (
-    <div className="container-custom py-12">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
-        <div>
-          <h1 className="text-4xl font-bold text-gray-800 tracking-tight">Our Collection</h1>
-          <p className="text-gray-600 mt-2">Find the perfect Islamic essentials for your lifestyle.</p>
+    <div className="min-h-screen bg-[#FAF8F5]">
+      <Helmet>
+        <title>All Products | Noor-E-Emaan</title>
+        <meta name="description" content="Browse our complete collection of Islamic products — Abayas, Jubbas, Tasbih, Jainamaz, Books and Fragrances." />
+      </Helmet>
+
+      {/* Hero header — light cream matching home page */}
+      <section className="relative pt-36 pb-16 overflow-hidden bg-gradient-to-br from-[#F7F2EC] via-[#EEDFD4] to-[#DCC8B8]">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,rgba(255,255,255,0.55),transparent_60%)]" />
+        <div className="absolute top-1/2 right-16 h-64 w-64 rounded-full bg-[#D8B9A5]/50 blur-3xl -translate-y-1/2" />
+        <div className="container-custom relative z-10 text-center">
+          <span className="inline-block px-5 py-2 rounded-full bg-white/45 border border-white/60 backdrop-blur-md text-[#8A5A44] text-[10px] font-black tracking-[0.3em] uppercase mb-6">
+            Full Collection
+          </span>
+          <h1 className="text-5xl lg:text-7xl font-black text-[#3F312B] tracking-tight leading-none mb-4">Our Collection</h1>
+          <p className="text-[#6F5E55] font-medium text-lg">Find the perfect Islamic essentials for your lifestyle.</p>
         </div>
-        
-        <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-          <div className="relative flex-grow md:w-64">
-            <input 
+      </section>
+
+      <div className="container-custom py-12">
+      {/* Filters */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+        <div className="flex flex-col sm:flex-row gap-3 w-full">
+          <div className="relative flex-grow md:max-w-72">
+            <input
               type="text"
               placeholder="Search products..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="input pl-10"
+              onChange={(e) => handleSearch(e.target.value)}
+              className="w-full bg-white border border-[#E8DDD1] rounded-2xl px-5 py-3.5 pl-11 text-[#27211E] placeholder:text-[#B8AAA0] font-medium outline-none focus:border-[#8A5A44] focus:ring-2 focus:ring-[#8A5A44]/10 transition-all text-sm"
             />
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 opacity-40">🔍</span>
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#B8AAA0]">🔍</span>
           </div>
-          <select 
+
+          <select
             value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className="input md:w-48 bg-white cursor-pointer"
+            onChange={(e) => handleCategory(e.target.value)}
+            className="bg-white border border-[#E8DDD1] rounded-2xl px-5 py-3.5 text-[#27211E] font-medium outline-none focus:border-[#8A5A44] transition-all text-sm cursor-pointer md:w-40"
           >
-            {categories.map(cat => (
-              <option key={cat} value={cat}>{cat}</option>
-            ))}
+            {CATEGORIES.map((cat) => <option key={cat} value={cat}>{cat}</option>)}
+          </select>
+
+          <select
+            value={sort}
+            onChange={(e) => handleSort(e.target.value)}
+            className="bg-white border border-[#E8DDD1] rounded-2xl px-5 py-3.5 text-[#27211E] font-medium outline-none focus:border-[#8A5A44] transition-all text-sm cursor-pointer md:w-52"
+          >
+            <option value="newest">Newest First</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
           </select>
         </div>
       </div>
 
-      {filteredProducts.length === 0 ? (
-        <div className="text-center py-24 bg-white rounded-3xl shadow-sm border border-dashed border-gray-300">
-          <div className="text-5xl mb-4">🛍️</div>
-          <h3 className="text-xl font-semibold text-gray-800">No products found</h3>
-          <p className="text-gray-500 mt-2">Try adjusting your search or category filters.</p>
-          <button 
-            onClick={() => {setSearch(''); setSelectedCategory('All');}}
-            className="mt-6 text-primary font-bold hover:underline"
-          >
-            Clear all filters
-          </button>
-        </div>
-      ) : (
+      {/* Loading skeleton */}
+      {loading && (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {filteredProducts.map(product => (
-            <ProductCard key={product._id} product={product} />
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} className="aspect-[4/5] bg-[#E8DDD1]/50 rounded-[2rem] animate-pulse" />
           ))}
         </div>
       )}
+
+      {/* Error state */}
+      {!loading && error && (
+        <div className="text-center py-24 bg-white rounded-[2.5rem] border border-[#E8DDD1]">
+          <p className="text-red-500 font-bold mb-4">{error}</p>
+          <button
+            onClick={() => fetchProducts(search, selectedCategory, sort, page)}
+            className="text-[#8A5A44] font-black uppercase tracking-widest text-xs border-b-2 border-[#8A5A44] pb-1 hover:text-[#6F4736]"
+          >
+            Retry
+          </button>
+        </div>
+      )}
+
+      {/* Empty state */}
+      {!loading && !error && products.length === 0 && (
+        <div className="text-center py-24 bg-white rounded-[2.5rem] border-2 border-dashed border-[#E8DDD1]">
+          <div className="text-5xl mb-5">🛍️</div>
+          <h3 className="text-xl font-black text-[#3F312B] uppercase tracking-wider mb-2">No Products Found</h3>
+          <p className="text-[#9B8C83] font-medium">Try adjusting your search or category filters.</p>
+          <button onClick={clearFilters}
+            className="mt-6 text-[#8A5A44] font-black uppercase tracking-widest text-xs border-b-2 border-[#8A5A44] pb-1">
+            Clear Filters
+          </button>
+        </div>
+      )}
+
+      {/* Product grid */}
+      {!loading && !error && products.length > 0 && (
+        <>
+          <p className="text-xs font-black uppercase tracking-[0.2em] text-[#9B8C83] mb-6">
+            {pagination.totalProducts} products found
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            {products.map((product, idx) => (
+              <AnimateOnScroll key={product._id} variant="fadeUp" delay={["", "delay-75", "delay-150", "delay-200"][idx % 4]}>
+                <ProductCard product={product} />
+              </AnimateOnScroll>
+            ))}
+          </div>
+
+          {/* Pagination */}
+          {pagination.totalPages > 1 && (
+            <div className="flex justify-center items-center gap-2 mt-14 flex-wrap">
+              <button
+                onClick={() => setPage((p) => Math.max(1, p - 1))}
+                disabled={page === 1}
+                className="px-5 py-2.5 rounded-full border border-[#E8DDD1] bg-white text-[#27211E] text-sm font-black disabled:opacity-40 hover:border-[#8A5A44] hover:text-[#8A5A44] transition-all"
+              >
+                ← Prev
+              </button>
+
+              {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map((p) => (
+                <button
+                  key={p}
+                  onClick={() => setPage(p)}
+                  className={`w-10 h-10 rounded-full text-sm font-black border transition-all ${
+                    p === page
+                      ? 'bg-[#27211E] text-white border-[#27211E]'
+                      : 'bg-white border-[#E8DDD1] text-[#27211E] hover:border-[#8A5A44] hover:text-[#8A5A44]'
+                  }`}
+                >
+                  {p}
+                </button>
+              ))}
+
+              <button
+                onClick={() => setPage((p) => Math.min(pagination.totalPages, p + 1))}
+                disabled={page === pagination.totalPages}
+                className="px-5 py-2.5 rounded-full border border-[#E8DDD1] bg-white text-[#27211E] text-sm font-black disabled:opacity-40 hover:border-[#8A5A44] hover:text-[#8A5A44] transition-all"
+              >
+                Next →
+              </button>
+            </div>
+          )}
+        </>
+      )}
+    </div>
     </div>
   );
 };
