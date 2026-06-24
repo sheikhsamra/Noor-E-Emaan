@@ -27,16 +27,18 @@ const app = express();
 // Security headers
 app.use(helmet());
 
-// CORS — dev allows localhost, prod uses CLIENT_URL from .env
+// CORS — dev allows localhost, prod allows known frontend URLs
 const allowedOrigins =
   process.env.NODE_ENV === "production"
-    ? [process.env.CLIENT_URL]
+    ? [
+        "https://noor-e-emaan-hfmp.vercel.app", // production frontend
+        process.env.CLIENT_URL,                  // override via env if needed
+      ].filter(Boolean)
     : ["http://localhost:5173", "http://127.0.0.1:5173"];
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow server-to-server requests (no origin) and listed origins
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
