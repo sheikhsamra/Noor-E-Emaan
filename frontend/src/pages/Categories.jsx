@@ -45,20 +45,42 @@ const Categories = () => {
         <meta name="description" content={`Browse our ${selectedCategory} collection at Noor-E-Emaan.`} />
       </Helmet>
 
-      {/* Hero header — light cream matching home page */}
-      <section className="relative pt-36 pb-16 overflow-hidden bg-gradient-to-br from-[#F7F2EC] via-[#EEDFD4] to-[#DCC8B8]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(255,255,255,0.55),transparent_60%)]" />
-        <div className="absolute top-1/2 left-16 h-64 w-64 rounded-full bg-[#D8B9A5]/50 blur-3xl -translate-y-1/2" />
+      {/* Hero banner */}
+      <section className="relative pt-36 pb-20 overflow-hidden bg-gradient-to-br from-[#F7F2EC] via-[#EEDFD4] to-[#DCC8B8]">
 
-        <div className="container-custom relative z-10 text-center">
-          <span className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/45 border border-white/60 backdrop-blur-md text-[#8A5A44] text-[10px] font-black tracking-[0.3em] uppercase mb-5">
-            {current?.icon} {current?.desc}
+        {/* Drifting background orbs */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(255,255,255,0.55),transparent_60%)]" />
+        <div className="absolute top-1/2 left-8 sm:left-16 h-56 w-56 sm:h-72 sm:w-72 rounded-full bg-[#D8B9A5]/55 blur-3xl -translate-y-1/2 animate-orb-2" />
+        <div className="absolute top-8 right-1/4 h-40 w-40 rounded-full bg-[#C9A646]/12 blur-3xl animate-orb" />
+        <div className="absolute bottom-0 right-12 h-36 w-36 rounded-full bg-[#8A5A44]/10 blur-3xl animate-orb-3" />
+
+        {/* Gold top accent line */}
+        <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-transparent via-[#C9A646] to-transparent" />
+
+        {/* key re-mounts the content on category switch → animations replay */}
+        <div key={selectedCategory} className="container-custom relative z-10 text-center">
+
+          {/* Badge — drops in */}
+          <span className="animate-banner-badge inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/50 border border-[#C9A646]/40 backdrop-blur-md text-[#8A5A44] text-[10px] font-black tracking-[0.3em] uppercase mb-6 shadow-sm">
+            <span className="animate-spark text-base">{current?.icon}</span>
+            {current?.desc}
           </span>
-          <h1 className="text-5xl lg:text-7xl font-black text-[#3F312B] tracking-tight leading-none mb-3">
+
+          {/* Title — blurs into focus */}
+          <h1 className="animate-banner-title text-5xl sm:text-6xl lg:text-8xl font-black text-[#3F312B] tracking-tight leading-none mb-4">
             {selectedCategory}
           </h1>
-          <p className="text-[#6F5E55] font-medium">
-            {products.length} products in this collection
+
+          {/* Gold divider line */}
+          <div className="animate-gold-line mx-auto mb-4 h-[3px] w-20 bg-gradient-to-r from-[#C9A646] to-[#B8942E] rounded-full" />
+
+          {/* Product count */}
+          <p className="animate-banner-desc text-[#6F5E55] font-medium text-base sm:text-lg">
+            {loading ? (
+              <span className="inline-block w-20 h-5 bg-[#D8B9A5]/50 rounded-full animate-pulse" />
+            ) : (
+              <>{products.length} products in this collection</>
+            )}
           </p>
         </div>
       </section>

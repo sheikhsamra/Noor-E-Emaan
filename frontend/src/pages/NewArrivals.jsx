@@ -23,26 +23,45 @@ const NewArrivals = () => {
         <meta name="description" content="Explore the latest Islamic clothing and accessories at Noor-E-Emaan." />
       </Helmet>
 
-      {/* Hero header — light cream gradient matching home page */}
-      <section className="relative pt-36 pb-20 overflow-hidden bg-gradient-to-br from-[#F7F2EC] via-[#EEDFD4] to-[#DCC8B8]">
+      {/* Hero banner */}
+      <section className="relative pt-36 pb-24 overflow-hidden bg-gradient-to-br from-[#F7F2EC] via-[#EEDFD4] to-[#DCC8B8]">
+
+        {/* Background glow orbs — they drift slowly */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,rgba(255,255,255,0.55),transparent_60%)]" />
-        <div className="absolute top-1/2 right-16 h-64 w-64 rounded-full bg-[#D8B9A5]/50 blur-3xl -translate-y-1/2" />
-        <div className="absolute bottom-0 left-16 h-48 w-48 rounded-full bg-[#C9A646]/10 blur-3xl" />
+        <div className="absolute top-1/2 right-8 sm:right-16 h-56 w-56 sm:h-72 sm:w-72 rounded-full bg-[#D8B9A5]/55 blur-3xl -translate-y-1/2 animate-orb" />
+        <div className="absolute bottom-0 left-8 sm:left-16 h-40 w-40 sm:h-56 sm:w-56 rounded-full bg-[#C9A646]/18 blur-3xl animate-orb-2" />
+        <div className="absolute top-10 left-1/3 h-32 w-32 rounded-full bg-[#8A5A44]/10 blur-3xl animate-orb-3" />
+
+        {/* Gold top accent line */}
+        <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-transparent via-[#C9A646] to-transparent" />
 
         <div className="container-custom relative z-10 text-center">
-          <span className="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/45 border border-white/60 backdrop-blur-md text-[#8A5A44] text-[10px] font-black tracking-[0.3em] uppercase mb-6">
-            ✨ Just Arrived
+
+          {/* Badge — bounces in from top */}
+          <span className="animate-banner-badge inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/50 border border-[#C9A646]/40 backdrop-blur-md text-[#8A5A44] text-[10px] font-black tracking-[0.3em] uppercase mb-6 shadow-sm">
+            <span className="animate-spark">✨</span> Just Arrived
           </span>
-          <h1 className="text-5xl lg:text-7xl font-black text-[#3F312B] tracking-tight leading-none mb-5">
-            New Arrivals
+
+          {/* Title — blurs into focus */}
+          <h1 className="animate-banner-title text-5xl sm:text-6xl lg:text-8xl font-black text-[#3F312B] tracking-tight leading-none mb-5">
+            New <span className="text-[#8A5A44] italic">Arrivals</span>
           </h1>
-          <p className="text-[#6F5E55] font-medium text-lg max-w-xl mx-auto leading-relaxed">
+
+          {/* Gold divider line — expands from center */}
+          <div className="animate-gold-line mx-auto mb-5 h-[3px] w-24 bg-gradient-to-r from-[#C9A646] to-[#B8942E] rounded-full" />
+
+          {/* Description */}
+          <p className="animate-banner-desc text-[#6F5E55] font-medium text-base sm:text-lg max-w-xl mx-auto leading-relaxed">
             Fresh additions to our collection — discover the latest Islamic essentials.
           </p>
-          <div className="mt-8">
-            <Link to="/products"
-              className="inline-flex items-center gap-2 border-2 border-[#8A5A44]/40 text-[#8A5A44] px-8 py-3 rounded-full font-black text-sm uppercase tracking-[0.15em] hover:bg-[#8A5A44] hover:text-white hover:border-[#8A5A44] transition-all duration-300 bg-white/30 backdrop-blur-sm">
-              View All Products
+
+          {/* Button */}
+          <div className="animate-banner-btn mt-8">
+            <Link
+              to="/products"
+              className="inline-flex items-center gap-2 border-2 border-[#8A5A44] text-[#8A5A44] px-8 py-3.5 rounded-full font-black text-sm uppercase tracking-[0.15em] hover:bg-[#8A5A44] hover:text-white transition-all duration-300 bg-white/40 backdrop-blur-sm shadow-sm"
+            >
+              View All Products →
             </Link>
           </div>
         </div>

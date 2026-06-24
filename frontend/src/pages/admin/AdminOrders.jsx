@@ -7,19 +7,19 @@ import { HiOutlineChevronLeft, HiOutlineChevronRight, HiOutlineFunnel } from 're
 const STATUSES = ['All', 'Pending', 'Confirmed', 'Shipped', 'Delivered', 'Cancelled'];
 
 const STATUS_STYLE = {
-  Pending:   { dot: 'bg-amber-400',   text: 'text-amber-700',   bg: 'bg-amber-50   border-amber-200'   },
-  Confirmed: { dot: 'bg-blue-500',    text: 'text-blue-700',    bg: 'bg-blue-50    border-blue-200'    },
-  Shipped:   { dot: 'bg-purple-500',  text: 'text-purple-700',  bg: 'bg-purple-50  border-purple-200'  },
-  Delivered: { dot: 'bg-emerald-500', text: 'text-emerald-700', bg: 'bg-emerald-50 border-emerald-200' },
-  Cancelled: { dot: 'bg-red-400',     text: 'text-red-700',     bg: 'bg-red-50     border-red-200'     },
+  Pending:   { dot: 'bg-amber-400',   text: 'text-amber-700',   bg: 'bg-amber-50    border-amber-200'   },
+  Confirmed: { dot: 'bg-[#8A5A44]',   text: 'text-[#6F4736]',   bg: 'bg-[#F7F2EC]   border-[#D8B9A5]'   },
+  Shipped:   { dot: 'bg-[#2D6A4F]',   text: 'text-[#2D6A4F]',   bg: 'bg-[#EDF5EF]   border-[#9FCDB5]'   },
+  Delivered: { dot: 'bg-emerald-500', text: 'text-emerald-700', bg: 'bg-emerald-50   border-emerald-200' },
+  Cancelled: { dot: 'bg-red-400',     text: 'text-red-700',     bg: 'bg-red-50       border-red-200'     },
 };
 
 const STATUS_SELECT_COLORS = {
-  Pending:   'bg-amber-50   text-amber-700   border-amber-300',
-  Confirmed: 'bg-blue-50    text-blue-700    border-blue-300',
-  Shipped:   'bg-purple-50  text-purple-700  border-purple-300',
-  Delivered: 'bg-emerald-50 text-emerald-700 border-emerald-300',
-  Cancelled: 'bg-red-50     text-red-700     border-red-300',
+  Pending:   'bg-amber-50    text-amber-700   border-amber-300',
+  Confirmed: 'bg-[#F7F2EC]   text-[#6F4736]   border-[#D8B9A5]',
+  Shipped:   'bg-[#EDF5EF]   text-[#2D6A4F]   border-[#9FCDB5]',
+  Delivered: 'bg-emerald-50  text-emerald-700  border-emerald-300',
+  Cancelled: 'bg-red-50      text-red-700      border-red-300',
 };
 
 export default function AdminOrders() {

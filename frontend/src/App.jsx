@@ -45,6 +45,7 @@ function AppContent() {
   return (
     <>
       {!isAdmin && <Navbar />}
+      <div className={!isAdmin ? "pb-16 md:pb-0" : ""}>
       <Suspense fallback={<PageLoader />}>
         <Routes>
           {/* ── Admin section — own layout, no Navbar/Footer ── */}
@@ -70,6 +71,7 @@ function AppContent() {
           <Route path="*"             element={<NotFound />} />
         </Routes>
       </Suspense>
+      </div>
       {!isAdmin && <Footer />}
     </>
   );

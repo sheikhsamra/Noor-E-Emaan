@@ -25,11 +25,11 @@ const STEP_META = {
 };
 
 const STATUS_STYLE = {
-  Pending:   { text: "text-amber-700",   bg: "bg-amber-50   border-amber-200"  },
-  Confirmed: { text: "text-blue-700",    bg: "bg-blue-50    border-blue-200"   },
-  Shipped:   { text: "text-purple-700",  bg: "bg-purple-50  border-purple-200" },
-  Delivered: { text: "text-emerald-700", bg: "bg-emerald-50 border-emerald-200"},
-  Cancelled: { text: "text-red-700",     bg: "bg-red-50     border-red-200"    },
+  Pending:   { text: "text-amber-700",   bg: "bg-amber-50   border-amber-200"   },
+  Confirmed: { text: "text-[#6F4736]",   bg: "bg-[#F7F2EC]  border-[#D8B9A5]"  },
+  Shipped:   { text: "text-[#2D6A4F]",   bg: "bg-[#EDF5EF]  border-[#9FCDB5]"  },
+  Delivered: { text: "text-emerald-700", bg: "bg-emerald-50  border-emerald-200" },
+  Cancelled: { text: "text-red-700",     bg: "bg-red-50      border-red-200"     },
 };
 
 const imgSrc = (src) => {

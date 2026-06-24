@@ -85,6 +85,17 @@ app.get("/api/test", (req, res) => {
   res.json({ message: "Backend is reachable", status: "OK" });
 });
 
+// Ensure DB is connected on every request (safe for serverless cold starts)
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    console.error("DB connection failed:", err.message);
+    res.status(503).json({ message: "Service unavailable. Please try again." });
+  }
+});
+
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
@@ -92,20 +103,12 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/admin", adminRoutes);
 
-const PORT = process.env.PORT || 5000;
-
-const startServer = async () => {
-  try {
-    await connectDB();
-    app.listen(PORT, () => {
-      console.log(`Server running on http://localhost:${PORT} [${process.env.NODE_ENV}]`);
-    });
-  } catch (error) {
-    console.error("Failed to start server:", error.message);
-    process.exit(1);
-  }
-};
-
-startServer();
+// Local dev only — Vercel manages its own HTTP server
+if (!process.env.VERCEL) {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT} [${process.env.NODE_ENV || "development"}]`);
+  });
+}
 
 export default app;

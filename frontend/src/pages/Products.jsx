@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import AnimateOnScroll from '../components/AnimateOnScroll';
 import API from '../api/axios';
+import { HiOutlineMagnifyingGlass } from 'react-icons/hi2';
 
 const CATEGORIES = ['All', 'Abaya', 'Jubba', 'Topi', 'Tasbih', 'Jainamaz', 'Fragrances', 'Books'];
 
@@ -70,16 +71,37 @@ const Products = () => {
         <meta name="description" content="Browse our complete collection of Islamic products — Abayas, Jubbas, Tasbih, Jainamaz, Books and Fragrances." />
       </Helmet>
 
-      {/* Hero header — light cream matching home page */}
-      <section className="relative pt-36 pb-16 overflow-hidden bg-gradient-to-br from-[#F7F2EC] via-[#EEDFD4] to-[#DCC8B8]">
+      {/* Hero banner */}
+      <section className="relative pt-36 pb-24 overflow-hidden bg-gradient-to-br from-[#F7F2EC] via-[#EEDFD4] to-[#DCC8B8]">
+
+        {/* Drifting background orbs */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,rgba(255,255,255,0.55),transparent_60%)]" />
-        <div className="absolute top-1/2 right-16 h-64 w-64 rounded-full bg-[#D8B9A5]/50 blur-3xl -translate-y-1/2" />
+        <div className="absolute top-1/2 right-8 sm:right-16 h-56 w-56 sm:h-72 sm:w-72 rounded-full bg-[#D8B9A5]/55 blur-3xl -translate-y-1/2 animate-orb" />
+        <div className="absolute bottom-0 left-8 sm:left-20 h-40 w-40 sm:h-52 sm:w-52 rounded-full bg-[#C9A646]/15 blur-3xl animate-orb-2" />
+        <div className="absolute top-12 left-1/3 h-28 w-28 rounded-full bg-[#8A5A44]/10 blur-3xl animate-orb-3" />
+
+        {/* Gold top accent line */}
+        <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-transparent via-[#C9A646] to-transparent" />
+
         <div className="container-custom relative z-10 text-center">
-          <span className="inline-block px-5 py-2 rounded-full bg-white/45 border border-white/60 backdrop-blur-md text-[#8A5A44] text-[10px] font-black tracking-[0.3em] uppercase mb-6">
-            Full Collection
+
+          {/* Badge */}
+          <span className="animate-banner-badge inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/50 border border-[#C9A646]/40 backdrop-blur-md text-[#8A5A44] text-[10px] font-black tracking-[0.3em] uppercase mb-6 shadow-sm">
+            <span className="animate-spark">🛍️</span> Full Collection
           </span>
-          <h1 className="text-5xl lg:text-7xl font-black text-[#3F312B] tracking-tight leading-none mb-4">Our Collection</h1>
-          <p className="text-[#6F5E55] font-medium text-lg">Find the perfect Islamic essentials for your lifestyle.</p>
+
+          {/* Title */}
+          <h1 className="animate-banner-title text-5xl sm:text-6xl lg:text-8xl font-black text-[#3F312B] tracking-tight leading-none mb-5">
+            Our <span className="text-[#8A5A44] italic">Collection</span>
+          </h1>
+
+          {/* Gold divider */}
+          <div className="animate-gold-line mx-auto mb-5 h-[3px] w-24 bg-gradient-to-r from-[#C9A646] to-[#B8942E] rounded-full" />
+
+          {/* Description */}
+          <p className="animate-banner-desc text-[#6F5E55] font-medium text-base sm:text-lg max-w-xl mx-auto">
+            Find the perfect Islamic essentials for your lifestyle.
+          </p>
         </div>
       </section>
 
@@ -95,7 +117,7 @@ const Products = () => {
               onChange={(e) => handleSearch(e.target.value)}
               className="w-full bg-white border border-[#E8DDD1] rounded-2xl px-5 py-3.5 pl-11 text-[#27211E] placeholder:text-[#B8AAA0] font-medium outline-none focus:border-[#8A5A44] focus:ring-2 focus:ring-[#8A5A44]/10 transition-all text-sm"
             />
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#B8AAA0]">🔍</span>
+            <HiOutlineMagnifyingGlass className="absolute left-4 top-1/2 -translate-y-1/2 text-[#B8AAA0] text-lg" />
           </div>
 
           <select

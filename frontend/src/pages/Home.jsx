@@ -97,7 +97,7 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="pb-20 bg-background">
+    <div className="pb-20 bg-[#FAF8F5]">
       <Helmet>
         <title>Noor-E-Emaan | Premium Islamic Store Pakistan</title>
         <meta name="description" content="Shop premium Islamic clothing, prayer accessories, books and fragrances. Authentic products delivered across Pakistan." />
@@ -194,34 +194,35 @@ const Home = () => {
         const delays = ["", "delay-100", "delay-200", "delay-300"];
 
         return (
-          <section key={cat.id} className="container-custom mb-24">
+          <section key={cat.id} className="container-custom mb-20">
             <AnimateOnScroll variant="fadeLeft">
-              <div className="flex justify-between items-end mb-10 border-b-2 border-cream pb-6">
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end mb-10 border-b-2 border-[#E8DDD1] pb-5 gap-3 sm:gap-0">
                 <div>
-                  <span className="text-accent font-black tracking-widest uppercase text-xs">
+                  <span className="text-[#C9A646] font-black tracking-widest uppercase text-[10px]">
                     {cat.subtitle}
                   </span>
-                  <h2 className="text-4xl font-black text-gray-900 mt-1">
+                  <h2 className="text-3xl sm:text-4xl font-black text-[#27211E] mt-1 tracking-tight">
                     {cat.title}
                   </h2>
                 </div>
                 <Link
                   to={`/products?category=${cat.id}`}
-                  className="text-primary font-black uppercase text-xs tracking-widest border-b-2 border-accent pb-1 hover:text-accent transition-all"
+                  className="inline-flex items-center gap-2 self-start sm:self-auto px-5 py-2.5 rounded-full border-2 border-[#8A5A44] text-[#8A5A44] font-black text-[11px] uppercase tracking-widest hover:bg-[#8A5A44] hover:text-white transition-all duration-300 flex-shrink-0"
                 >
-                  View All {cat.id} →
+                  View All {cat.id}
+                  <span className="text-sm">→</span>
                 </Link>
               </div>
             </AnimateOnScroll>
 
             {loading ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-10">
                 {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="aspect-[4/5] bg-gray-100 animate-pulse rounded-[2rem]" />
+                  <div key={i} className="aspect-[4/5] bg-[#F0EBE5] animate-pulse rounded-[2rem]" />
                 ))}
               </div>
             ) : categoryProducts.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-10">
                 {categoryProducts.map((product, idx) => (
                   <AnimateOnScroll key={product._id} variant="fadeUp" delay={delays[idx] || ""}>
                     <ProductCard product={product} />
@@ -229,8 +230,8 @@ const Home = () => {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-20 bg-cream/5 rounded-[2rem] border-2 border-dashed border-cream">
-                <p className="text-gray-400 font-bold italic">
+              <div className="text-center py-16 bg-[#F7F2EC] rounded-[2rem] border-2 border-dashed border-[#E8DDD1]">
+                <p className="text-[#9B8C83] font-bold italic">
                   No Products Available in {cat.id}
                 </p>
               </div>
@@ -242,9 +243,9 @@ const Home = () => {
             {/* Customer Gallery Banner */}
 <CustomerGalleryBanner />
 
-      <section className="bg-cream/20 py-24 border-y border-cream/50 shadow-inner">
+      <section className="bg-[#F7F2EC] py-16 sm:py-24 border-y border-[#E8DDD1]">
         <div className="container-custom">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-16">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-10 lg:gap-16">
             {[
               {
                 icon: <HiOutlineSparkles />,
@@ -263,25 +264,19 @@ const Home = () => {
               },
             ].map((item, i) => (
               <AnimateOnScroll key={i} variant="scaleUp" delay={["", "delay-150", "delay-300"][i]}>
-              <div
-                className="text-center group bg-white p-10 flex flex-col gap-5  rounded-[3rem] shadow-premium hover:shadow-2xl transition-all duration-500 border border-cream/50"
-              >
-                <div className="mx-auto h-20 w-20 rounded-full bg-gradient-to-br from-[#F7F2EC] to-[#D8B9A5] flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
-
-                  <span className="text-4xl text-[#8A5A44] group-hover:text-[#6F4736] transition-all duration-500 ">
-                    {item.icon}
-                  </span>
-
+                <div className="text-center group bg-white p-8 sm:p-10 flex flex-col gap-4 sm:gap-5 rounded-[2.5rem] sm:rounded-[3rem] shadow-sm hover:shadow-xl transition-all duration-500 border border-[#E8DDD1]">
+                  <div className="mx-auto h-18 w-18 sm:h-20 sm:w-20 rounded-full bg-gradient-to-br from-[#F7F2EC] to-[#D8B9A5] flex items-center justify-center shadow-lg group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
+                    <span className="text-3xl sm:text-4xl text-[#8A5A44] group-hover:text-[#6F4736] transition-all duration-500">
+                      {item.icon}
+                    </span>
+                  </div>
+                  <h3 className="font-black text-xl sm:text-2xl text-[#8A5A44] uppercase tracking-tighter leading-none">
+                    {item.title}
+                  </h3>
+                  <p className="text-[#9B8C83] leading-relaxed font-medium text-sm sm:text-base">
+                    {item.desc}
+                  </p>
                 </div>
-
-                <h3 className="font-black text-2xl mb-4 text-primary uppercase tracking-tighter leading-none">
-                  {item.title}
-                </h3>
-
-                <p className="text-gray-500 leading-relaxed font-medium">
-                  {item.desc}
-                </p>
-              </div>
               </AnimateOnScroll>
             ))}
           </div>

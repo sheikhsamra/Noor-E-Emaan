@@ -237,6 +237,59 @@
 }
 
 
+/* ── Banner entrance animations (NewArrivals + Categories) ── */
+@keyframes bannerBadgeDrop {
+  0%   { opacity: 0; transform: translateY(-28px) scale(0.78); }
+  60%  { opacity: 1; transform: translateY(6px)   scale(1.07); }
+  100% { opacity: 1; transform: translateY(0)     scale(1);    }
+}
+.animate-banner-badge {
+  animation: bannerBadgeDrop 0.65s cubic-bezier(0.22, 1, 0.36, 1) 0.05s both;
+}
+
+@keyframes bannerTitleReveal {
+  0%   { opacity: 0; transform: translateY(36px) scaleY(0.88); filter: blur(8px); }
+  100% { opacity: 1; transform: translateY(0)    scaleY(1);    filter: blur(0);   }
+}
+.animate-banner-title {
+  animation: bannerTitleReveal 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.22s both;
+}
+
+@keyframes bannerFadeUp {
+  0%   { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0);    }
+}
+.animate-banner-desc { animation: bannerFadeUp 0.75s ease-out 0.52s both; }
+.animate-banner-btn  { animation: bannerFadeUp 0.75s ease-out 0.75s both; }
+
+@keyframes goldLineExpand {
+  0%   { transform: scaleX(0); opacity: 0; }
+  100% { transform: scaleX(1); opacity: 1; }
+}
+.animate-gold-line {
+  animation: goldLineExpand 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.95s both;
+  transform-origin: center;
+}
+
+@keyframes sparkPop {
+  0%   { transform: scale(0) rotate(-140deg); opacity: 0; }
+  65%  { transform: scale(1.35) rotate(18deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg);    opacity: 1; }
+}
+.animate-spark {
+  display: inline-block;
+  animation: sparkPop 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.05s both;
+}
+
+@keyframes orbDrift {
+  0%, 100% { transform: translate(0, 0)     scale(1);    }
+  35%       { transform: translate(14px, -18px) scale(1.06); }
+  70%       { transform: translate(-9px,  11px) scale(0.96); }
+}
+.animate-orb   { animation: orbDrift  9s ease-in-out infinite; }
+.animate-orb-2 { animation: orbDrift 12s ease-in-out 3.5s infinite; }
+.animate-orb-3 { animation: orbDrift  7s ease-in-out 1.5s infinite; }
+
 /* custumers scrolling  */
 
 @keyframes customerMarquee {

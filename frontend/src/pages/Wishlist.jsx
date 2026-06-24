@@ -5,12 +5,15 @@ import { Link } from 'react-router-dom';
 import ProductCard from '../components/ProductCard';
 import AnimateOnScroll from '../components/AnimateOnScroll';
 import API from '../api/axios';
-import { HiOutlineHeart, HiOutlineShoppingBag, HiOutlineLockClosed, HiOutlineSparkles } from 'react-icons/hi2';
+import { useToast } from '../context/ToastContext';
+import { HiOutlineHeart, HiOutlineShoppingBag, HiOutlineLockClosed, HiOutlineSparkles, HiXMark } from 'react-icons/hi2';
 
 const Wishlist = () => {
   const { user, token, setUser } = useContext(AuthContext);
+  const { showToast } = useToast();
   const [wishlistItems, setWishlistItems] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [removingId, setRemovingId] = useState(null);
 
   useEffect(() => {
     const fetchWishlist = async () => {
@@ -28,6 +31,24 @@ const Wishlist = () => {
     };
     fetchWishlist();
   }, [token, setUser]);
+
+  const handleRemove = async (e, productId) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setRemovingId(productId);
+    try {
+      await API.post(`/auth/wishlist/${productId}`);
+      setWishlistItems(prev => prev.filter(p => p._id !== productId));
+      const fresh = await API.get('/auth/profile');
+      setUser(fresh.data);
+      localStorage.setItem('user', JSON.stringify(fresh.data));
+      showToast('Removed from wishlist.', 'info');
+    } catch {
+      showToast('Failed to remove. Please try again.', 'error');
+    } finally {
+      setRemovingId(null);
+    }
+  };
 
   if (loading) return (
     <div className="min-h-screen bg-[#FAF8F5] flex items-center justify-center">
@@ -110,7 +131,20 @@ const Wishlist = () => {
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-5 mb-16">
               {wishlistItems.map((product, idx) => (
                 <AnimateOnScroll key={product._id} variant="fadeUp" delay={["", "delay-75", "delay-150", "delay-200"][idx % 4]}>
-                  <ProductCard product={product} />
+                  <div className="relative">
+                    <ProductCard product={product} />
+                    <button
+                      onClick={(e) => handleRemove(e, product._id)}
+                      disabled={removingId === product._id}
+                      title="Remove from wishlist"
+                      className="absolute top-5 left-5 z-30 h-8 w-8 rounded-full bg-white border border-[#E8DDD1] shadow-md flex items-center justify-center text-[#8A5A44] hover:bg-red-500 hover:text-white hover:border-red-500 transition-all duration-200 disabled:opacity-50"
+                    >
+                      {removingId === product._id
+                        ? <span className="h-3.5 w-3.5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                        : <HiXMark className="text-base" />
+                      }
+                    </button>
+                  </div>
                 </AnimateOnScroll>
               ))}
             </div>
