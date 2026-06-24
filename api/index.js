@@ -24,6 +24,9 @@ dotenv.config();
 
 const app = express();
 
+// Trust Vercel's proxy so rate-limit and IP headers work correctly
+app.set("trust proxy", 1);
+
 // Security headers
 app.use(helmet());
 
@@ -34,9 +37,6 @@ const allowedOrigins = [
   "http://127.0.0.1:5173",
   process.env.CLIENT_URL,
 ].filter(Boolean);
-
-// Handle CORS preflight for all routes
-app.options("*", cors());
 
 app.use(
   cors({
@@ -61,12 +61,13 @@ app.use((req, res, next) => {
   next();
 });
 
-// General rate limit — 100 requests per 15 min per IP across all /api routes
+// Rate limit — validate:false prevents ValidationError crash on Vercel proxy
 const generalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
   standardHeaders: true,
   legacyHeaders: false,
+  validate: { trustProxy: false },
   message: { message: "Too many requests, please try again later." },
 });
 app.use("/api", generalLimiter);
