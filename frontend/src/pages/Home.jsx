@@ -37,6 +37,49 @@ const Home = () => {
     { id: 'Fragrances', title: 'Premium Attar', subtitle: 'Sacred Fragrance' },
   ];
 
+  const catFallbackGradients = {
+    Abaya:      'bg-gradient-to-br from-[#8A5A44] to-[#5A3828]',
+    Jubba:      'bg-gradient-to-br from-[#4A6741] to-[#2E4428]',
+    Topi:       'bg-gradient-to-br from-[#C9A646] to-[#8A6E2A]',
+    Jainamaz:   'bg-gradient-to-br from-[#4A6B8A] to-[#2C4A6B]',
+    Tasbih:     'bg-gradient-to-br from-[#7C6A9E] to-[#4A3A6B]',
+    Books:      'bg-gradient-to-br from-[#3F312B] to-[#1C1310]',
+    Fragrances: 'bg-gradient-to-br from-[#9B6B7A] to-[#6B3A4A]',
+  };
+
+  // Simple 2-color gradients for banner background
+  const catBannerGradients = {
+    Abaya:      'from-[#3F312B] to-[#8A5A44]',
+    Jubba:      'from-[#1A2E1C] to-[#3D6645]',
+    Topi:       'from-[#2A2010] to-[#7A6030]',
+    Jainamaz:   'from-[#0E1E2A] to-[#2E5570]',
+    Tasbih:     'from-[#1E1428] to-[#4A3560]',
+    Books:      'from-[#100C06] to-[#3A2A18]',
+    Fragrances: 'from-[#1A0810] to-[#602840]',
+  };
+
+  // Floating images above banner (clothing categories only)
+  const catFloatingImages = {
+    Abaya: '/banner/bg1.png',
+    Jubba: '/banner/bg3.png',
+    Topi:  '/banner/bg4.png',
+  };
+
+  // Background images for non-clothing categories
+  const catBgImages = {
+    Jainamaz: '/jainamaz/jainamaz1.jpg',
+    Tasbih:   '/tasbih/tasbih1.jpg',
+    Books:    '/books/book1.jpg',
+  };
+
+  const getCategoryImage = (catId) => {
+    const prod = products.find(p => normalize(p.category) === normalize(catId));
+    return prod?.images?.[0] || null;
+  };
+
+  const getCategoryCount = (catId) =>
+    products.filter(p => normalize(p.category) === normalize(catId)).length;
+
   const heroSlides = [
     {
       image: "/banner/bg1.png",
@@ -184,6 +227,88 @@ const Home = () => {
       </section>
 
 
+      {/* ── Category Gallery ── */}
+      <section className="container-custom mt-10 mb-14">
+
+        {/* Compact header */}
+        <AnimateOnScroll variant="fadeUp">
+          <div className="flex items-center justify-between mb-3">
+            <div>
+              <p className="text-[#C9A646] font-black tracking-[0.2em] uppercase text-[9px] mb-0.5">Explore</p>
+              <h2 className="text-2xl sm:text-3xl font-black text-[#27211E] tracking-tight leading-none">
+                Shop by <span className="text-[#8A5A44] italic">Category</span>
+              </h2>
+            </div>
+            <Link
+              to="/categories"
+              className="text-[11px] font-black text-[#8A5A44] uppercase tracking-widest hover:text-[#6F4736] transition-colors flex items-center gap-1"
+            >
+              See All <span>→</span>
+            </Link>
+          </div>
+        </AnimateOnScroll>
+
+        {/* Tight gallery grid — 4 cols desktop, 2 cols mobile */}
+        <AnimateOnScroll variant="fadeUp" delay="delay-75">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5">
+
+            {categories.map((cat) => {
+              const img = getCategoryImage(cat.id);
+              const count = getCategoryCount(cat.id);
+              return (
+                <Link
+                  key={cat.id}
+                  to={`/categories?category=${cat.id}`}
+                  className="group relative aspect-square overflow-hidden rounded-lg"
+                >
+                  {loading ? (
+                    <div className="absolute inset-0 bg-[#E8DDD1] animate-pulse rounded-lg" />
+                  ) : img ? (
+                    <img
+                      src={img}
+                      alt={cat.id}
+                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  ) : (
+                    <div className={`absolute inset-0 rounded-lg ${catFallbackGradients[cat.id]}`} />
+                  )}
+
+                  {/* gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/5 to-transparent" />
+
+                  {/* count pill */}
+                  {!loading && count > 0 && (
+                    <span className="absolute top-2 left-2 px-1.5 py-[2px] rounded-full bg-black/40 backdrop-blur-sm text-white text-[8px] font-bold leading-none">
+                      {count}
+                    </span>
+                  )}
+
+                  {/* label */}
+                  <div className="absolute inset-x-0 bottom-0 p-2 sm:p-3 text-center">
+                    <p className="text-white font-black text-base sm:text-lg leading-tight drop-shadow-lg tracking-wide">{cat.id}</p>
+                  </div>
+                </Link>
+              );
+            })}
+
+            {/* "View All" — 8th slot */}
+            <Link
+              to="/products"
+              className="group aspect-square rounded-lg bg-gradient-to-br from-[#F7F2EC] to-[#E8DDD1] border border-[#E8DDD1] hover:border-[#C9A646] flex flex-col items-center justify-center gap-1.5 transition-all duration-300"
+            >
+              <div className="h-9 w-9 rounded-full bg-[#8A5A44]/10 group-hover:bg-[#8A5A44]/20 flex items-center justify-center transition-all duration-300 group-hover:scale-110">
+                <svg className="w-4 h-4 text-[#8A5A44]" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+              </div>
+              <span className="text-[#3F312B] font-black text-[11px] tracking-tight leading-none">View All</span>
+              <span className="text-[#9B8C83] text-[9px] font-medium leading-none">Products</span>
+            </Link>
+
+          </div>
+        </AnimateOnScroll>
+      </section>
+
       {/* card section */}
 
       {categories.map((cat) => {
@@ -193,49 +318,86 @@ const Home = () => {
 
         const delays = ["", "delay-100", "delay-200", "delay-300"];
 
+        const bannerImg = products.find(p => normalize(p.category) === normalize(cat.id))?.images?.[0];
+
         return (
-          <section key={cat.id} className="container-custom mb-20">
-            <AnimateOnScroll variant="fadeLeft">
-              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-end mb-10 border-b-2 border-[#E8DDD1] pb-5 gap-3 sm:gap-0">
-                <div>
-                  <span className="text-[#C9A646] font-black tracking-widest uppercase text-[10px]">
+          <section key={cat.id} className="mb-20">
+
+            {/* Full-width Category Banner */}
+            <AnimateOnScroll variant="fadeUp">
+              <Link
+                to={`/products?category=${cat.id}`}
+                className="block relative h-56 sm:h-72 lg:h-80 mb-8 mt-28 sm:mt-40 lg:mt-48 group"
+              >
+                {/* Background — clipped to banner bounds */}
+                <div className="absolute inset-0 overflow-hidden">
+                  {catBgImages[cat.id] ? (
+                    <>
+                      <img
+                        src={catBgImages[cat.id]}
+                        alt=""
+                        className="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/40 to-black/10" />
+                    </>
+                  ) : (
+                    <div className={`absolute inset-0 bg-gradient-to-r ${catBannerGradients[cat.id]}`} />
+                  )}
+                  <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#C9A646] via-[#E8C96A] to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-gradient-to-r from-[#C9A646]/30 to-transparent" />
+                </div>
+
+                {/* Floating image — overflows above banner, animated */}
+                {catFloatingImages[cat.id] && (
+                  <div className="absolute bottom-0 right-2 sm:right-8 lg:right-20 w-[38%] sm:w-[34%] lg:w-[28%] h-[calc(100%+5rem)] sm:h-[calc(100%+8rem)] lg:h-[calc(100%+10rem)] animate-cat-float z-10 flex items-end justify-center">
+                    <img
+                      src={catFloatingImages[cat.id]}
+                      alt={cat.id}
+                      className="w-full h-full object-contain object-bottom drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+                    />
+                  </div>
+                )}
+
+                {/* Text — centered */}
+                <div className={`absolute inset-0 flex flex-col items-center justify-center text-center z-20 ${catFloatingImages[cat.id] ? 'pr-[42%] sm:pr-[36%] lg:pr-[30%] pl-4 sm:pl-8' : 'px-8'}`}>
+                  <span className="text-[#C9A646] font-black tracking-[0.25em] uppercase text-[11px] sm:text-[13px] mb-2">
                     {cat.subtitle}
                   </span>
-                  <h2 className="text-3xl sm:text-4xl font-black text-[#27211E] mt-1 tracking-tight">
+                  <h2 className="text-4xl sm:text-5xl lg:text-7xl font-black text-white tracking-tight leading-none mb-5">
                     {cat.title}
                   </h2>
+                  <span className="inline-flex items-center gap-2 w-fit px-5 sm:px-6 py-2.5 rounded-full bg-white/15 backdrop-blur-sm border border-white/30 text-white font-black text-[11px] sm:text-[13px] uppercase tracking-widest group-hover:bg-white/25 transition-all duration-300">
+                    Shop Now →
+                  </span>
                 </div>
-                <Link
-                  to={`/products?category=${cat.id}`}
-                  className="inline-flex items-center gap-2 self-start sm:self-auto px-5 py-2.5 rounded-full border-2 border-[#8A5A44] text-[#8A5A44] font-black text-[11px] uppercase tracking-widest hover:bg-[#8A5A44] hover:text-white transition-all duration-300 flex-shrink-0"
-                >
-                  View All {cat.id}
-                  <span className="text-sm">→</span>
-                </Link>
-              </div>
+
+              </Link>
             </AnimateOnScroll>
 
-            {loading ? (
-              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-10">
-                {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="aspect-[4/5] bg-[#F0EBE5] animate-pulse rounded-[2rem]" />
-                ))}
-              </div>
-            ) : categoryProducts.length > 0 ? (
-              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-10">
-                {categoryProducts.map((product, idx) => (
-                  <AnimateOnScroll key={product._id} variant="fadeUp" delay={delays[idx] || ""}>
-                    <ProductCard product={product} />
-                  </AnimateOnScroll>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-16 bg-[#F7F2EC] rounded-[2rem] border-2 border-dashed border-[#E8DDD1]">
-                <p className="text-[#9B8C83] font-bold italic">
-                  No Products Available in {cat.id}
-                </p>
-              </div>
-            )}
+            {/* Products grid inside container */}
+            <div className="container-custom">
+              {loading ? (
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-10">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="aspect-[4/5] bg-[#F0EBE5] animate-pulse rounded-[2rem]" />
+                  ))}
+                </div>
+              ) : categoryProducts.length > 0 ? (
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-10">
+                  {categoryProducts.map((product, idx) => (
+                    <AnimateOnScroll key={product._id} variant="fadeUp" delay={delays[idx] || ""}>
+                      <ProductCard product={product} />
+                    </AnimateOnScroll>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-16 bg-[#F7F2EC] rounded-[2rem] border-2 border-dashed border-[#E8DDD1]">
+                  <p className="text-[#9B8C83] font-bold italic">
+                    No Products Available in {cat.id}
+                  </p>
+                </div>
+              )}
+            </div>
           </section>
         );
       })}
