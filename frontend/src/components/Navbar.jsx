@@ -61,12 +61,11 @@ export default function Navbar() {
 
           {/* ── Logo ── */}
           <Link to="/" className="flex items-center gap-3 flex-shrink-0 group">
-            <div className="h-11 w-11 rounded-full bg-gradient-to-br from-[#F7F2EC] to-[#EEDFD4] border-2 border-[#D8B9A5] flex items-center justify-center text-xl shadow-md group-hover:scale-105 transition-transform duration-300">
-              🌙
-            </div>
-            <span className="text-xl font-black tracking-wide text-[#3F312B]">
-              Noor-E-Emaan
-            </span>
+            <img
+              src="/logo.png"
+              alt="Noor-E-Emaan"
+              className="h-12 w-auto object-contain group-hover:scale-105 transition-transform duration-300"
+            />
           </Link>
 
           {/* ── Desktop nav links ── */}

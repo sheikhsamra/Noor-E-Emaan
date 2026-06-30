@@ -16,13 +16,11 @@ export default function Footer() {
           {/* Brand */}
           <div className="lg:col-span-1">
             <Link to="/" className="flex items-center gap-3 mb-5 group">
-              <div className="h-12 w-12 rounded-full bg-[#8A5A44]/15 border border-[#D8B9A5] flex items-center justify-center text-2xl shadow-sm">
-                🌙
-              </div>
-              <div>
-                <span className="text-xl font-black tracking-tight text-[#27211E] block">Noor-E-Emaan</span>
-                <span className="text-[10px] font-bold tracking-[0.3em] uppercase text-[#8A5A44]">Islamic Store</span>
-              </div>
+              <img
+                src="/logo.png"
+                alt="Noor-E-Emaan"
+                className="h-14 w-auto object-contain group-hover:scale-105 transition-transform duration-300"
+              />
             </Link>
             <p className="text-[#6F5E55] text-sm leading-relaxed font-medium max-w-xs">
               Your trusted destination for premium Islamic essentials. Every product is hand-picked for quality, authenticity and barakat.
