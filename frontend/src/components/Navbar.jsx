@@ -56,15 +56,15 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 w-full z-50 bg-white/70 backdrop-blur-2xl border-b border-[#E8DDD1]/60 shadow-[0_4px_24px_rgba(63,49,43,0.08)]">
+      <nav className="fixed top-0 left-0 w-full z-50 bg-white/70 backdrop-blur-2xl border-b border-[#E8DDD1]/60">
         <div className="container-custom flex justify-between items-center h-20">
 
           {/* ── Logo ── */}
           <Link to="/" className="flex items-center gap-3 flex-shrink-0 group">
             <img
               src="/logo.png"
-              alt="Noor-E-Emaan"
-              className="h-12 w-auto object-contain group-hover:scale-105 transition-transform duration-300"
+              alt="Fazaljees"
+              className="h-36 w-auto object-contain group-hover:scale-105 transition-transform duration-300"
             />
           </Link>
 

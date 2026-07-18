@@ -19,8 +19,8 @@ const NewArrivals = () => {
   return (
     <div className="min-h-screen bg-[#FAF8F5]">
       <Helmet>
-        <title>New Arrivals | Noor-E-Emaan</title>
-        <meta name="description" content="Explore the latest Islamic clothing and accessories at Noor-E-Emaan." />
+        <title>New Arrivals | Fazaljees</title>
+        <meta name="description" content="Explore the latest Islamic clothing and accessories at Fazaljees." />
       </Helmet>
 
       {/* Hero banner */}

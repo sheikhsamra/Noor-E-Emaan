@@ -67,7 +67,7 @@ const Products = () => {
   return (
     <div className="min-h-screen bg-[#FAF8F5]">
       <Helmet>
-        <title>All Products | Noor-E-Emaan</title>
+        <title>All Products | Fazaljees</title>
         <meta name="description" content="Browse our complete collection of Islamic products — Abayas, Jubbas, Tasbih, Jainamaz, Books and Fragrances." />
       </Helmet>
 

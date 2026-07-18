@@ -66,7 +66,7 @@ export default function MyOrders() {
 
   return (
     <div className="min-h-screen bg-[#FAF8F5] pt-20">
-      <Helmet><title>My Orders | Noor-E-Emaan</title></Helmet>
+      <Helmet><title>My Orders | Fazaljees</title></Helmet>
 
       {/* Header */}
       <div className="bg-gradient-to-br from-[#F7F2EC] via-[#EEDFD4] to-[#E0CFC3] border-b border-[#E8DDD1]">

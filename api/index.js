@@ -75,7 +75,7 @@ app.use("/api", generalLimiter);
 // Root route — confirms API is running
 app.get("/", (req, res) => {
   res.json({
-    name: "Noor-E-Emaan API",
+    name: "Fazaljees API",
     status: "running",
     version: "1.0.0",
     endpoints: {

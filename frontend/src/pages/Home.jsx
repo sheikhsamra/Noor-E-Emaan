@@ -142,9 +142,9 @@ const Home = () => {
   return (
     <div className="pb-20 bg-[#FAF8F5]">
       <Helmet>
-        <title>Noor-E-Emaan | Premium Islamic Store Pakistan</title>
+        <title>Fazaljees | Premium Islamic Store Pakistan</title>
         <meta name="description" content="Shop premium Islamic clothing, prayer accessories, books and fragrances. Authentic products delivered across Pakistan." />
-        <meta property="og:title" content="Noor-E-Emaan | Premium Islamic Store" />
+        <meta property="og:title" content="Fazaljees | Premium Islamic Store" />
         <meta property="og:description" content="Abayas, Jubbas, Prayer accessories, Books and Fragrances." />
       </Helmet>
 

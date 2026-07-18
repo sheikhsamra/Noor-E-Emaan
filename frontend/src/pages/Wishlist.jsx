@@ -82,7 +82,7 @@ const Wishlist = () => {
   return (
     <div className="min-h-screen bg-[#FAF8F5] pt-20">
       <Helmet>
-        <title>My Wishlist | Noor-E-Emaan</title>
+        <title>My Wishlist | Fazaljees</title>
       </Helmet>
 
       {/* ── Header ── */}

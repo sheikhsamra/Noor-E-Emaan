@@ -46,7 +46,7 @@ export default function Login() {
             Premium Islamic Store
           </span>
           <h2 className="text-4xl font-black text-[#3F312B] tracking-tight mb-5 leading-none">
-            Noor-E-Emaan
+            Fazaljees
           </h2>
           <p className="text-[#6F5E55] leading-relaxed font-medium text-lg">
             Discover premium Islamic essentials crafted for your spiritual and everyday lifestyle.

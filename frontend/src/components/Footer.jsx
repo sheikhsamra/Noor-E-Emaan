@@ -5,6 +5,7 @@ import {
   HiOutlineMapPin,
   HiOutlineHeart,
 } from 'react-icons/hi2';
+import { FaFacebook, FaInstagram, FaWhatsapp } from 'react-icons/fa';
 
 export default function Footer() {
   return (
@@ -18,20 +19,23 @@ export default function Footer() {
             <Link to="/" className="flex items-center gap-3 mb-5 group">
               <img
                 src="/logo.png"
-                alt="Noor-E-Emaan"
-                className="h-14 w-auto object-contain group-hover:scale-105 transition-transform duration-300"
+                alt="Fazaljees"
+                className="h-36 w-auto object-contain group-hover:scale-105 transition-transform duration-300"
               />
             </Link>
             <p className="text-[#6F5E55] text-sm leading-relaxed font-medium max-w-xs">
               Your trusted destination for premium Islamic essentials. Every product is hand-picked for quality, authenticity and barakat.
             </p>
             <div className="flex gap-3 mt-7">
-              {['FB', 'IG', 'WA'].map((s) => (
-                <button key={s}
-                  className="h-10 w-10 rounded-full bg-white border border-[#E8DDD1] text-[#8A5A44] hover:bg-[#8A5A44] hover:text-white hover:border-[#8A5A44] transition-all duration-300 text-xs font-black shadow-sm">
-                  {s}
-                </button>
-              ))}
+              <a href="#" className="h-10 w-10 rounded-full bg-white border border-[#E8DDD1] text-[#1877F2] hover:bg-[#1877F2] hover:text-white hover:border-[#1877F2] transition-all duration-300 flex items-center justify-center shadow-sm">
+                <FaFacebook className="text-lg" />
+              </a>
+              <a href="#" className="h-10 w-10 rounded-full bg-white border border-[#E8DDD1] text-[#E1306C] hover:bg-gradient-to-br hover:from-[#F58529] hover:via-[#E1306C] hover:to-[#833AB4] hover:text-white hover:border-transparent transition-all duration-300 flex items-center justify-center shadow-sm">
+                <FaInstagram className="text-lg" />
+              </a>
+              <a href="#" className="h-10 w-10 rounded-full bg-white border border-[#E8DDD1] text-[#25D366] hover:bg-[#25D366] hover:text-white hover:border-[#25D366] transition-all duration-300 flex items-center justify-center shadow-sm">
+                <FaWhatsapp className="text-lg" />
+              </a>
             </div>
           </div>
 
@@ -79,7 +83,7 @@ export default function Footer() {
             <h4 className="text-xs font-black uppercase tracking-[0.3em] text-[#8A5A44] mb-5">Contact</h4>
             <ul className="space-y-4 mb-7">
               {[
-                { icon: <HiOutlineEnvelope />, label: 'Email', value: 'info@nooreemaan.pk' },
+                { icon: <HiOutlineEnvelope />, label: 'Email', value: 'info@fazaljees.pk' },
                 { icon: <HiOutlinePhone />, label: 'WhatsApp', value: '+92 300 0000000' },
                 { icon: <HiOutlineMapPin />, label: 'Location', value: 'Lahore, Pakistan' },
               ].map((item) => (
@@ -117,7 +121,7 @@ export default function Footer() {
 
         {/* Bottom bar */}
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-[#9B8C83] text-xs font-medium">
-          <p>&copy; {new Date().getFullYear()} Noor-E-Emaan. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Fazaljees. All rights reserved.</p>
           <p className="flex items-center gap-1.5">
             Made with <HiOutlineHeart className="text-[#8A5A44] text-sm" /> in Pakistan
           </p>

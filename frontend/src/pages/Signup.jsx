@@ -23,7 +23,7 @@ export default function Signup() {
     try {
       const res = await API.post('/auth/signup', form);
       login(res.data);
-      showToast('Account created! Welcome to Noor-E-Emaan.', 'success');
+      showToast('Account created! Welcome to Fazaljees.', 'success');
       navigate('/');
     } catch (err) {
       const msg = err.response?.data?.message || 'Signup failed. Please try again.';
@@ -53,7 +53,7 @@ export default function Signup() {
             Join Our Family
           </span>
           <h2 className="text-4xl font-black text-[#3F312B] tracking-tight mb-5 leading-none">
-            Noor-E-Emaan
+            Fazaljees
           </h2>
           <p className="text-[#6F5E55] leading-relaxed font-medium text-lg">
             Create your account and explore our curated collection of premium Islamic essentials.

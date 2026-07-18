@@ -41,8 +41,8 @@ const Categories = () => {
   return (
     <div className="min-h-screen bg-[#FAF8F5]">
       <Helmet>
-        <title>{selectedCategory} Collection | Noor-E-Emaan</title>
-        <meta name="description" content={`Browse our ${selectedCategory} collection at Noor-E-Emaan.`} />
+        <title>{selectedCategory} Collection | Fazaljees</title>
+        <meta name="description" content={`Browse our ${selectedCategory} collection at Fazaljees.`} />
       </Helmet>
 
       {/* Hero banner */}

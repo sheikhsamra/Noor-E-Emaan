@@ -199,9 +199,9 @@ const ProductDetails = () => {
   return (
     <div className={`min-h-screen bg-[#FAF8F5] pt-20 transition-all duration-700 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
       <Helmet>
-        <title>{product.name} | Noor-E-Emaan</title>
+        <title>{product.name} | Fazaljees</title>
         <meta name="description" content={product.description?.slice(0, 160)} />
-        <meta property="og:title" content={`${product.name} | Noor-E-Emaan`} />
+        <meta property="og:title" content={`${product.name} | Fazaljees`} />
         <meta property="og:image" content={product.images?.[0]} />
         <meta property="og:type" content="product" />
       </Helmet>

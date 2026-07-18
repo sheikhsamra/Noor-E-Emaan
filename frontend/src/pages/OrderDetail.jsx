@@ -77,7 +77,7 @@ export default function OrderDetail() {
 
   return (
     <div className="min-h-screen bg-[#FAF8F5] pt-20 pb-16">
-      <Helmet><title>Order #{order._id.slice(-8).toUpperCase()} | Noor-E-Emaan</title></Helmet>
+      <Helmet><title>Order #{order._id.slice(-8).toUpperCase()} | Fazaljees</title></Helmet>
 
       {/* ── Header ── */}
       <div className="bg-gradient-to-br from-[#F7F2EC] via-[#EEDFD4] to-[#E0CFC3] border-b border-[#E8DDD1]">

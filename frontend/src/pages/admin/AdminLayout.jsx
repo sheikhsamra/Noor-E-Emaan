@@ -58,7 +58,7 @@ export default function AdminLayout() {
             🌙
           </div>
           <div>
-            <p className="font-black text-white text-sm leading-tight">Noor-E-Emaan</p>
+            <p className="font-black text-white text-sm leading-tight">Fazaljees</p>
             <p className="text-[10px] text-[#C9A646] font-bold uppercase tracking-[0.2em]">Admin Panel</p>
           </div>
           <button
