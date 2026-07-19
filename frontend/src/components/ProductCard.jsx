@@ -21,33 +21,39 @@ function getOptimizedImage(url, width = 500) {
 }
 
 export default function ProductCard({ product }) {
-  const { user, token } = useContext(AuthContext);
+  const { user, token, setUser } = useContext(AuthContext);
   const { showToast } = useToast();
   const navigate = useNavigate();
 
-  const [isLiked, setIsLiked] = useState(false);
-  const [likesCount, setLikesCount] = useState(product.likes?.length || 0);
+  const [isWishlisted, setIsWishlisted] = useState(false);
 
   useEffect(() => {
-    if (user && product.likes) {
-      setIsLiked(product.likes.includes(user._id));
+    if (user?.wishlist) {
+      setIsWishlisted(
+        user.wishlist.some((item) =>
+          typeof item === 'object' ? item._id === product._id : item === product._id
+        )
+      );
     }
-  }, [user, product.likes]);
+  }, [user?.wishlist, product._id]);
 
   const handleLike = async (e) => {
     e.preventDefault();
     e.stopPropagation();
     if (!token) {
-      showToast("Please log in to like products.", "info");
+      showToast("Please log in to save products.", "info");
       navigate("/login");
       return;
     }
     try {
-      const res = await API.post(`/products/${product._id}/like`);
-      setIsLiked(res.data.isLiked);
-      setLikesCount(res.data.likes);
+      const res = await API.post(`/auth/wishlist/${product._id}`);
+      setIsWishlisted(res.data.isWishlisted);
+      const profile = await API.get('/auth/profile');
+      setUser(profile.data);
+      localStorage.setItem('user', JSON.stringify(profile.data));
+      showToast(res.data.isWishlisted ? "Added to wishlist!" : "Removed from wishlist.", res.data.isWishlisted ? "success" : "info");
     } catch (err) {
-      console.error("Like error:", err);
+      console.error("Wishlist error:", err);
     }
   };
 
@@ -81,17 +87,12 @@ export default function ProductCard({ product }) {
         <button
           onClick={handleLike}
           className={`absolute top-3 right-3 h-10 w-10 rounded-full backdrop-blur-xl flex items-center justify-center transition-all duration-300 z-20 border shadow-lg ${
-            isLiked
+            isWishlisted
               ? "bg-[#8A5A44] text-white border-[#8A5A44]"
               : "bg-white/80 text-[#8A5A44] border-white/80 hover:bg-[#8A5A44] hover:text-white"
           }`}
         >
-          {isLiked ? <HiHeart className="text-lg" /> : <HiOutlineHeart className="text-lg" />}
-          {likesCount > 0 && (
-            <span className="absolute -bottom-1 -right-1 bg-white text-[#8A5A44] text-[9px] font-black min-w-4 h-4 px-0.5 rounded-full flex items-center justify-center shadow-md">
-              {likesCount}
-            </span>
-          )}
+          {isWishlisted ? <HiHeart className="text-lg" /> : <HiOutlineHeart className="text-lg" />}
         </button>
 
         {discountPercent && (
