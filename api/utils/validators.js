@@ -12,16 +12,66 @@ export const validate = (req, res, next) => {
 };
 
 // --- Auth ---
+export const checkEmailRules = [
+  body("email").isEmail().normalizeEmail().withMessage("Valid email is required"),
+];
+
 export const signupRules = [
   body("name").trim().notEmpty().withMessage("Name is required"),
   body("email").isEmail().normalizeEmail().withMessage("Valid email is required"),
-  body("password").isLength({ min: 8 }).withMessage("Password must be at least 8 characters"),
-  body("phone").optional({ checkFalsy: true }).isMobilePhone().withMessage("Invalid phone number"),
+  body("password")
+    .isLength({ min: 8 }).withMessage("Password must be at least 8 characters")
+    .matches(/[A-Z]/).withMessage("Password must contain at least one uppercase letter")
+    .matches(/[a-z]/).withMessage("Password must contain at least one lowercase letter")
+    .matches(/[0-9]/).withMessage("Password must contain at least one number"),
+  body("confirmPassword").custom((value, { req }) => {
+    if (value !== req.body.password) throw new Error("Passwords do not match");
+    return true;
+  }),
 ];
 
 export const loginRules = [
   body("email").isEmail().normalizeEmail().withMessage("Valid email is required"),
   body("password").notEmpty().withMessage("Password is required"),
+];
+
+export const verifyOtpRules = [
+  body("email").isEmail().normalizeEmail().withMessage("Valid email is required"),
+  body("otp")
+    .isLength({ min: 6, max: 6 }).withMessage("OTP must be 6 digits")
+    .isNumeric().withMessage("OTP must contain only numbers"),
+];
+
+export const resendOtpRules = [
+  body("email").isEmail().normalizeEmail().withMessage("Valid email is required"),
+];
+
+export const forgotPasswordRules = [
+  body("email").isEmail().normalizeEmail().withMessage("Valid email is required"),
+];
+
+export const verifyResetOtpRules = [
+  body("email").isEmail().normalizeEmail().withMessage("Valid email is required"),
+  body("otp")
+    .isLength({ min: 6, max: 6 }).withMessage("OTP must be 6 digits")
+    .isNumeric().withMessage("OTP must contain only numbers"),
+];
+
+export const resendResetOtpRules = [
+  body("email").isEmail().normalizeEmail().withMessage("Valid email is required"),
+];
+
+export const resetPasswordRules = [
+  body("resetToken").notEmpty().withMessage("Reset token is required"),
+  body("newPassword")
+    .isLength({ min: 8 }).withMessage("Password must be at least 8 characters")
+    .matches(/[A-Z]/).withMessage("Password must contain at least one uppercase letter")
+    .matches(/[a-z]/).withMessage("Password must contain at least one lowercase letter")
+    .matches(/[0-9]/).withMessage("Password must contain at least one number"),
+  body("confirmPassword").custom((value, { req }) => {
+    if (value !== req.body.newPassword) throw new Error("Passwords do not match");
+    return true;
+  }),
 ];
 
 // --- Products ---
