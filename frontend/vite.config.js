@@ -9,8 +9,12 @@ export default defineConfig({
     tailwindcss(),
   ],
   server: {
+    headers: {
+      // Required for Google OAuth popup to communicate back to the parent window.
+      // 'same-origin' (helmet default) blocks window.closed polling by the OAuth library.
+      'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
+    },
     proxy: {
-      // Proxies all requests starting with /api to the backend server
       '/api': {
         target: 'http://127.0.0.1:5000',
         changeOrigin: true,

@@ -28,7 +28,11 @@ const app = express();
 app.set("trust proxy", 1);
 
 // Security headers
-app.use(helmet());
+// crossOriginOpenerPolicy must be same-origin-allow-popups so Google OAuth
+// popups can communicate back to the parent window (default same-origin blocks this)
+app.use(helmet({
+  crossOriginOpenerPolicy: { policy: "same-origin-allow-popups" },
+}));
 
 // Allowed origins — always includes the deployed frontend, plus localhost for dev
 const allowedOrigins = [
