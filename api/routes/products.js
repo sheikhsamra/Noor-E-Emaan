@@ -18,7 +18,7 @@ router.get("/", async (req, res) => {
     const cached = getCache(cacheKey);
     if (cached) return res.json(cached);
 
-    const { search, category, sort, page = 1, limit = 12 } = req.query;
+    const { search, category, subCategory, sort, page = 1, limit = 12 } = req.query;
 
     const filter = {};
 
@@ -32,6 +32,10 @@ router.get("/", async (req, res) => {
 
     if (category && category !== "All") {
       filter.category = { $regex: `^${category}$`, $options: "i" };
+    }
+
+    if (subCategory?.trim()) {
+      filter.subCategory = { $regex: `^${subCategory.trim()}$`, $options: "i" };
     }
 
     const sortMap = {
@@ -93,7 +97,8 @@ router.put("/:id", protect, adminOnly, productUpdateRules, validate, async (req,
 
 // Admin: Delete product
 router.delete("/:id", protect, adminOnly, async (req, res) => {
-  await Product.findByIdAndDelete(req.params.id);
+  const product = await Product.findByIdAndDelete(req.params.id);
+  if (!product) return res.status(404).json({ message: "Product not found." });
   clearCache();
   res.json({ message: "Deleted" });
 });

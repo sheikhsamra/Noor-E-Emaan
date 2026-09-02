@@ -1,6 +1,7 @@
 import express from "express";
 import multer from "multer";
 import cloudinary from "cloudinary";
+import { protect, adminOnly } from "../utils/authMiddleware.js";
 
 const router = express.Router();
 
@@ -10,10 +11,16 @@ cloudinary.v2.config({
   api_secret: process.env.CLOUD_API_SECRET,
 });
 
-// Memory storage — no disk writes required (works on Vercel serverless)
-const upload = multer({ storage: multer.memoryStorage() });
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB max
+  fileFilter: (_, file, cb) => {
+    if (file.mimetype.startsWith('image/')) cb(null, true);
+    else cb(new Error('Only image files are allowed'));
+  },
+});
 
-router.post("/", upload.single("image"), async (req, res) => {
+router.post("/", protect, adminOnly, upload.single("image"), async (req, res) => {
   try {
     const result = await new Promise((resolve, reject) => {
       const stream = cloudinary.v2.uploader.upload_stream(

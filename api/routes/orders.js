@@ -58,45 +58,68 @@ router.post("/", protect, orderRules, validate, async (req, res) => {
       return res.status(404).json({ message: "One or more products were not found." });
     }
 
+    // Atomically reserve stock per item — the $gte guard means concurrent
+    // orders can never both succeed in taking the last unit(s).
+    const reserved = [];
+    let insufficientProduct = null;
+
+    for (const item of items) {
+      const updated = await Product.findOneAndUpdate(
+        { _id: item.productId, stock: { $gte: item.quantity } },
+        { $inc: { stock: -item.quantity } },
+        { new: true }
+      );
+      if (!updated) {
+        insufficientProduct = dbProducts.find((p) => p._id.toString() === item.productId);
+        break;
+      }
+      reserved.push({ product: updated, quantity: item.quantity });
+    }
+
+    // Not enough stock for some item — release whatever we already reserved
+    if (insufficientProduct) {
+      await Promise.all(
+        reserved.map((r) => Product.findByIdAndUpdate(r.product._id, { $inc: { stock: r.quantity } }))
+      );
+      return res.status(400).json({
+        message: `"${insufficientProduct.name}" only has ${insufficientProduct.stock} unit(s) in stock.`,
+      });
+    }
+
     const orderProducts = [];
     let total = 0;
 
-    for (const item of items) {
-      const product = dbProducts.find((p) => p._id.toString() === item.productId);
-
-      if (product.stock < item.quantity) {
-        return res.status(400).json({
-          message: `"${product.name}" only has ${product.stock} unit(s) in stock.`,
-        });
-      }
-
+    for (const { product, quantity } of reserved) {
       const unitPrice = product.discountPrice || product.price;
-      total += unitPrice * item.quantity;
+      total += unitPrice * quantity;
 
       orderProducts.push({
         productId: product._id,
         name:      product.name,
         price:     unitPrice,
-        quantity:  item.quantity,
+        quantity,
         image:     product.images?.[0] || "",
       });
     }
 
     const delivery = total >= 3000 ? 0 : 200;
-    const order = await Order.create({
-      user:         req.user.id,
-      products:     orderProducts,
-      total:        total + delivery,
-      customerInfo,
-      status:       "Pending",
-      statusHistory: [{ status: "Pending", note: "Order placed successfully." }],
-    });
-
-    await Promise.all(
-      items.map((item) =>
-        Product.findByIdAndUpdate(item.productId, { $inc: { stock: -item.quantity } })
-      )
-    );
+    let order;
+    try {
+      order = await Order.create({
+        user:         req.user.id,
+        products:     orderProducts,
+        total:        total + delivery,
+        customerInfo,
+        status:       "Pending",
+        statusHistory: [{ status: "Pending", note: "Order placed successfully." }],
+      });
+    } catch (createErr) {
+      // Order record failed — release the stock we reserved above
+      await Promise.all(
+        reserved.map((r) => Product.findByIdAndUpdate(r.product._id, { $inc: { stock: r.quantity } }))
+      );
+      throw createErr;
+    }
 
     try {
       const client = getTwilioClient();

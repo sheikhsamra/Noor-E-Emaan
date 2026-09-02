@@ -16,15 +16,16 @@ async function seedAdmin() {
   if (existing) {
     await User.updateOne(
       { email: "admin@gmail.com" },
-      { $set: { name: "Admin", password: hashed, role: "admin" } }
+      { $set: { name: "Admin", password: hashed, role: "admin", isEmailVerified: true } }
     );
     console.log("✓ Admin account updated (password reset + role set to admin).");
   } else {
     await User.create({
-      name:     "Admin",
-      email:    "admin@gmail.com",
-      password: hashed,
-      role:     "admin",
+      name:            "Admin",
+      email:           "admin@gmail.com",
+      password:        hashed,
+      role:            "admin",
+      isEmailVerified: true,
     });
     console.log("✓ Admin account created!");
   }

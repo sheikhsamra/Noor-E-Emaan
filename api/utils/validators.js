@@ -84,6 +84,7 @@ export const productCreateRules = [
     .withMessage("Discount price must be a positive number"),
   body("stock").isInt({ min: 0 }).withMessage("Stock must be a non-negative whole number"),
   body("category").trim().notEmpty().withMessage("Category is required"),
+  body("subCategory").optional({ checkFalsy: true }).trim(),
   body("description").trim().notEmpty().withMessage("Description is required"),
 ];
 
@@ -96,6 +97,7 @@ export const productUpdateRules = [
     .withMessage("Discount price must be a positive number"),
   body("stock").optional().isInt({ min: 0 }).withMessage("Stock must be a non-negative whole number"),
   body("category").optional().trim().notEmpty().withMessage("Category cannot be empty"),
+  body("subCategory").optional({ checkFalsy: true }).trim(),
 ];
 
 // --- Orders ---

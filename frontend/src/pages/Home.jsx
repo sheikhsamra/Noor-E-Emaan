@@ -28,49 +28,56 @@ const Home = () => {
   }, []);
 
   const categories = [
-    { id: 'Abaya', title: 'Premium Abaya', subtitle: 'Exquisite Modesty' },
-    { id: 'Jubba', title: 'Royal Jubba', subtitle: 'Traditional Heritage' },
-    { id: 'Topi', title: 'Premium Topi', subtitle: 'Traditional Style' },
-    { id: 'Jainamaz', title: 'Luxury Jainamaz', subtitle: 'Divine Comfort' },
-    { id: 'Tasbih', title: 'Handcrafted Tasbih', subtitle: 'Spiritual Dhikr' },
-    { id: 'Books', title: 'Islamic Books', subtitle: 'Divine Knowledge' },
-    { id: 'Fragrances', title: 'Premium Attar', subtitle: 'Sacred Fragrance' },
+    { id: 'Abaya',        title: 'Premium Abaya',    subtitle: 'Exquisite Modesty'   },
+    { id: 'Hijab',        title: 'Elegant Hijab',    subtitle: 'Graceful Covering'   },
+    { id: 'Niqab',        title: 'Premium Niqab',    subtitle: 'Sacred Modesty'      },
+    { id: 'Prayer Set',   title: 'Prayer Set',       subtitle: 'Complete Essentials' },
+    { id: 'Islamic Books',title: 'Islamic Books',    subtitle: 'Divine Knowledge'    },
+    { id: 'Fragrances',   title: 'Premium Attar',    subtitle: 'Sacred Fragrance'    },
+    { id: 'Kids',         title: 'Kids Collection',  subtitle: 'Little Muslims'      },
+    { id: 'Men',          title: "Men's Collection", subtitle: 'Traditional Style'   },
+    { id: 'Topi',         title: 'Prayer Caps',      subtitle: 'Kufi & Topi'         },
+    { id: 'Accessories',  title: 'Accessories',      subtitle: 'Islamic Essentials'  },
+    { id: 'Other',        title: 'Other Items',      subtitle: 'More Products'       },
   ];
 
   const catFallbackGradients = {
-    Abaya:      'bg-gradient-to-br from-[#8A5A44] to-[#5A3828]',
-    Jubba:      'bg-gradient-to-br from-[#4A6741] to-[#2E4428]',
-    Topi:       'bg-gradient-to-br from-[#C9A646] to-[#8A6E2A]',
-    Jainamaz:   'bg-gradient-to-br from-[#4A6B8A] to-[#2C4A6B]',
-    Tasbih:     'bg-gradient-to-br from-[#7C6A9E] to-[#4A3A6B]',
-    Books:      'bg-gradient-to-br from-[#3F312B] to-[#1C1310]',
-    Fragrances: 'bg-gradient-to-br from-[#9B6B7A] to-[#6B3A4A]',
+    Abaya:         'bg-gradient-to-br from-[#8A5A44] to-[#5A3828]',
+    Hijab:         'bg-gradient-to-br from-[#B56E8A] to-[#7A3A55]',
+    Niqab:         'bg-gradient-to-br from-[#3A3A3A] to-[#1A1A1A]',
+    'Prayer Set':  'bg-gradient-to-br from-[#4A8A6A] to-[#2A5A42]',
+    'Islamic Books':'bg-gradient-to-br from-[#3F312B] to-[#1C1310]',
+    Fragrances:    'bg-gradient-to-br from-[#9B6B7A] to-[#6B3A4A]',
+    Kids:          'bg-gradient-to-br from-[#C9A646] to-[#8A6A20]',
+    Men:           'bg-gradient-to-br from-[#2A4A6B] to-[#0E2035]',
+    Topi:          'bg-gradient-to-br from-[#6B8A5A] to-[#3A5A2A]',
+    Accessories:   'bg-gradient-to-br from-[#7C6A9E] to-[#4A3A6B]',
+    Other:         'bg-gradient-to-br from-[#6B6B6B] to-[#3A3A3A]',
   };
 
-  // Simple 2-color gradients for banner background
   const catBannerGradients = {
-    Abaya:      'from-[#3F312B] to-[#8A5A44]',
-    Jubba:      'from-[#1A2E1C] to-[#3D6645]',
-    Topi:       'from-[#2A2010] to-[#7A6030]',
-    Jainamaz:   'from-[#0E1E2A] to-[#2E5570]',
-    Tasbih:     'from-[#1E1428] to-[#4A3560]',
-    Books:      'from-[#100C06] to-[#3A2A18]',
-    Fragrances: 'from-[#1A0810] to-[#602840]',
+    Abaya:         'from-[#3F312B] to-[#8A5A44]',
+    Hijab:         'from-[#3A1828] to-[#8A4A65]',
+    Niqab:         'from-[#1A1A1A] to-[#3A3A3A]',
+    'Prayer Set':  'from-[#0E2018] to-[#2E6048]',
+    'Islamic Books':'from-[#100C06] to-[#3A2A18]',
+    Fragrances:    'from-[#1A0810] to-[#602840]',
+    Kids:          'from-[#2A1E00] to-[#7A5A10]',
+    Men:           'from-[#06101A] to-[#1A3050]',
+    Topi:          'from-[#0E1A08] to-[#2A4A18]',
+    Accessories:   'from-[#1E1428] to-[#4A3560]',
+    Other:         'from-[#1A1A1A] to-[#4A4A4A]',
   };
 
-  // Floating images above banner (clothing categories only)
+  // Floating images for categories that have product images configured
   const catFloatingImages = {
     Abaya: '/banner/bg1.png',
-    Jubba: '/banner/bg3.png',
-    Topi:  '/banner/bg4.png',
+    Hijab: '/banner/bg2.png',
+    Men:   '/banner/bg3.png',
   };
 
-  // Background images for non-clothing categories
-  const catBgImages = {
-    Jainamaz: '/jainamaz/jainamaz1.jpg',
-    Tasbih:   '/tasbih/tasbih1.jpg',
-    Books:    '/books/book1.jpg',
-  };
+  // Static fallback bg images (used only if no product image found)
+  const catBgImages = {};
 
   const getCategoryImage = (catId) => {
     const prod = products.find(p => normalize(p.category) === normalize(catId));

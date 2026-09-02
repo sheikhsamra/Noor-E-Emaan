@@ -6,13 +6,17 @@ import AnimateOnScroll from '../components/AnimateOnScroll';
 import API from '../api/axios';
 
 const CATEGORIES = [
-  { name: 'Abaya',      icon: '👗', desc: 'Elegant modest fashion' },
-  { name: 'Jubba',      icon: '🕌', desc: 'Traditional thobes & jubbas' },
-  { name: 'Topi',       icon: '🎩', desc: 'Prayer caps & kufi' },
-  { name: 'Tasbih',     icon: '📿', desc: 'Dhikr beads & counters' },
-  { name: 'Jainamaz',   icon: '🗺️', desc: 'Prayer mats & musallah' },
-  { name: 'Fragrances', icon: '✨', desc: 'Attar, oud & bukhoor' },
-  { name: 'Books',      icon: '📚', desc: 'Islamic literature' },
+  { name: 'Abaya',         icon: '👗', desc: 'Elegant modest fashion'       },
+  { name: 'Hijab',         icon: '🧕', desc: 'Scarves, shawls & covers'     },
+  { name: 'Niqab',         icon: '✨', desc: 'Face veils & niqab sets'      },
+  { name: 'Prayer Set',    icon: '🕌', desc: 'Jainamaz, tasbih & essentials'},
+  { name: 'Islamic Books', icon: '📚', desc: 'Quran, hadith & Islamic literature' },
+  { name: 'Fragrances',    icon: '🌸', desc: 'Attar, oud & bukhoor'        },
+  { name: 'Kids',          icon: '🧒', desc: 'Islamic wear for children'    },
+  { name: 'Men',           icon: '👔', desc: 'Thobes & men\'s wear'        },
+  { name: 'Topi',          icon: '🎩', desc: 'Prayer caps & kufi'          },
+  { name: 'Accessories',   icon: '📿', desc: 'Tasbih, rings & more'        },
+  { name: 'Other',         icon: '🛍️', desc: 'More Islamic products'       },
 ];
 
 const Categories = () => {
@@ -85,27 +89,6 @@ const Categories = () => {
         </div>
       </section>
 
-      {/* Category tab pills — light cream background */}
-      <div className="bg-white border-b border-[#E8DDD1] sticky top-[80px] z-40 shadow-sm">
-        <div className="container-custom">
-          <div className="flex gap-2 overflow-x-auto py-3 scrollbar-hide">
-            {CATEGORIES.map((cat) => (
-              <button
-                key={cat.name}
-                onClick={() => setSelectedCategory(cat.name)}
-                className={`flex items-center gap-2 px-5 py-2.5 rounded-full font-black text-xs uppercase tracking-[0.12em] whitespace-nowrap transition-all duration-300 flex-shrink-0 ${
-                  selectedCategory === cat.name
-                    ? 'bg-[#8A5A44] text-white shadow-md'
-                    : 'bg-[#F7F2EC] text-[#6F5E55] border border-[#E8DDD1] hover:bg-[#EEDFD4] hover:text-[#3F312B]'
-                }`}
-              >
-                <span>{cat.icon}</span>
-                {cat.name}
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
 
       {/* Products grid */}
       <section className="container-custom py-14">

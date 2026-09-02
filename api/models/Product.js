@@ -9,6 +9,7 @@ const reviewSchema = new mongoose.Schema({
 const productSchema = new mongoose.Schema({
   name: String,
   category: String,
+  subCategory: { type: String, default: "", trim: true },
   description: String,
   price: Number,
   discountPrice: Number,

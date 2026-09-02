@@ -6,16 +6,22 @@ import AnimateOnScroll from '../components/AnimateOnScroll';
 import API from '../api/axios';
 import { HiOutlineMagnifyingGlass } from 'react-icons/hi2';
 
-const CATEGORIES = ['All', 'Abaya', 'Jubba', 'Topi', 'Tasbih', 'Jainamaz', 'Fragrances', 'Books'];
+const CATEGORIES = ['All', 'Abaya', 'Hijab', 'Niqab', 'Prayer Set', 'Islamic Books', 'Fragrances', 'Kids', 'Men', 'Topi', 'Accessories', 'Other'];
 
 const Products = () => {
   const { search: urlSearch } = useLocation();
-  const categoryParam = new URLSearchParams(urlSearch).get('category');
+  const params            = new URLSearchParams(urlSearch);
+  const categoryParam     = params.get('category');
+  const subCategoryParam  = params.get('subCategory');
+  const qParam            = params.get('q');
 
   const [products, setProducts] = useState([]);
   const [pagination, setPagination] = useState({ page: 1, totalPages: 1, totalProducts: 0 });
-  const [search, setSearch] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState(categoryParam || 'All');
+  const [search, setSearch] = useState(qParam || '');
+  const [selectedCategory, setSelectedCategory] = useState(
+    categoryParam && CATEGORIES.includes(categoryParam) ? categoryParam : 'All'
+  );
+  const [selectedSubCategory, setSelectedSubCategory] = useState(subCategoryParam || '');
   const [sort, setSort] = useState('newest');
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -23,13 +29,14 @@ const Products = () => {
 
   const debounceRef = useRef(null);
 
-  const fetchProducts = useCallback(async (searchVal, category, sortVal, pageVal) => {
+  const fetchProducts = useCallback(async (searchVal, category, subCategory, sortVal, pageVal) => {
     setLoading(true);
     setError('');
     try {
       const params = new URLSearchParams({ sort: sortVal, page: pageVal, limit: 12 });
       if (searchVal.trim()) params.set('search', searchVal.trim());
       if (category !== 'All') params.set('category', category);
+      if (subCategory) params.set('subCategory', subCategory);
 
       const res = await API.get(`/products?${params}`);
       setProducts(res.data.products);
@@ -42,27 +49,32 @@ const Products = () => {
     }
   }, []);
 
-  // Sync URL category param on navigation (e.g. from Home page category click)
+  // Sync category + subCategory + search from URL when navigating from Navbar
   useEffect(() => {
-    if (categoryParam) {
-      setSelectedCategory(categoryParam);
-      setPage(1);
-    }
-  }, [categoryParam]);
+    const p    = new URLSearchParams(urlSearch);
+    const cat  = p.get('category');
+    const sub  = p.get('subCategory') || '';
+    const q    = p.get('q') || '';
+    setSelectedCategory(cat && CATEGORIES.includes(cat) ? cat : 'All');
+    setSelectedSubCategory(sub);
+    setSearch(q);
+    setPage(1);
+  }, [urlSearch]);
 
-  // Debounce search; fire immediately for category/sort/page changes
+  // Debounce search; fire immediately for category/subCategory/sort/page changes
   useEffect(() => {
     clearTimeout(debounceRef.current);
     debounceRef.current = setTimeout(() => {
-      fetchProducts(search, selectedCategory, sort, page);
+      fetchProducts(search, selectedCategory, selectedSubCategory, sort, page);
     }, search ? 400 : 0);
     return () => clearTimeout(debounceRef.current);
-  }, [search, selectedCategory, sort, page, fetchProducts]);
+  }, [search, selectedCategory, selectedSubCategory, sort, page, fetchProducts]);
 
   const handleSearch = (val) => { setSearch(val); setPage(1); };
-  const handleCategory = (val) => { setSelectedCategory(val); setPage(1); };
+  const handleCategory = (val) => { setSelectedCategory(val); setSelectedSubCategory(''); setPage(1); };
   const handleSort = (val) => { setSort(val); setPage(1); };
-  const clearFilters = () => { setSearch(''); setSelectedCategory('All'); setSort('newest'); setPage(1); };
+  const clearSubCategory = () => { setSelectedSubCategory(''); setPage(1); };
+  const clearFilters = () => { setSearch(''); setSelectedCategory('All'); setSelectedSubCategory(''); setSort('newest'); setPage(1); };
 
   return (
     <div className="min-h-screen bg-[#FAF8F5]">
@@ -105,40 +117,45 @@ const Products = () => {
         </div>
       </section>
 
-      <div className="container-custom py-12">
-      {/* Filters */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
-        <div className="flex flex-col sm:flex-row gap-3 w-full">
-          <div className="relative flex-grow md:max-w-72">
-            <input
-              type="text"
-              placeholder="Search products..."
-              value={search}
-              onChange={(e) => handleSearch(e.target.value)}
-              className="w-full bg-white border border-[#E8DDD1] rounded-2xl px-5 py-3.5 pl-11 text-[#27211E] placeholder:text-[#B8AAA0] font-medium outline-none focus:border-[#8A5A44] focus:ring-2 focus:ring-[#8A5A44]/10 transition-all text-sm"
-            />
-            <HiOutlineMagnifyingGlass className="absolute left-4 top-1/2 -translate-y-1/2 text-[#B8AAA0] text-lg" />
-          </div>
-
-          <select
-            value={selectedCategory}
-            onChange={(e) => handleCategory(e.target.value)}
-            className="bg-white border border-[#E8DDD1] rounded-2xl px-5 py-3.5 text-[#27211E] font-medium outline-none focus:border-[#8A5A44] transition-all text-sm cursor-pointer md:w-40"
-          >
-            {CATEGORIES.map((cat) => <option key={cat} value={cat}>{cat}</option>)}
-          </select>
-
-          <select
-            value={sort}
-            onChange={(e) => handleSort(e.target.value)}
-            className="bg-white border border-[#E8DDD1] rounded-2xl px-5 py-3.5 text-[#27211E] font-medium outline-none focus:border-[#8A5A44] transition-all text-sm cursor-pointer md:w-52"
-          >
-            <option value="newest">Newest First</option>
-            <option value="price-asc">Price: Low to High</option>
-            <option value="price-desc">Price: High to Low</option>
-          </select>
+      <div className="container-custom">
+      {/* Search + Sort row */}
+      <div className="flex flex-col sm:flex-row gap-3 pt-8 mb-8">
+        <div className="relative flex-grow">
+          <input
+            type="text"
+            placeholder="Search products..."
+            value={search}
+            onChange={(e) => handleSearch(e.target.value)}
+            className="w-full bg-white border border-[#E8DDD1] rounded-2xl px-5 py-3.5 pl-11 text-[#27211E] placeholder:text-[#B8AAA0] font-medium outline-none focus:border-[#8A5A44] focus:ring-2 focus:ring-[#8A5A44]/10 transition-all text-sm"
+          />
+          <HiOutlineMagnifyingGlass className="absolute left-4 top-1/2 -translate-y-1/2 text-[#B8AAA0] text-lg" />
         </div>
+        <select
+          value={sort}
+          onChange={(e) => handleSort(e.target.value)}
+          className="bg-white border border-[#E8DDD1] rounded-2xl px-5 py-3.5 text-[#27211E] font-medium outline-none focus:border-[#8A5A44] transition-all text-sm cursor-pointer sm:w-52"
+        >
+          <option value="newest">Newest First</option>
+          <option value="price-asc">Price: Low to High</option>
+          <option value="price-desc">Price: High to Low</option>
+        </select>
       </div>
+
+      {/* Active subcategory chip */}
+      {selectedSubCategory && (
+        <div className="flex items-center gap-2 -mt-4 mb-8">
+          <span className="inline-flex items-center gap-2 pl-4 pr-2 py-2 rounded-full bg-[#F7F2EC] border border-[#E8DDD1] text-[#8A5A44] text-xs font-black uppercase tracking-widest">
+            {selectedSubCategory}
+            <button
+              onClick={clearSubCategory}
+              className="h-5 w-5 rounded-full bg-white border border-[#E8DDD1] flex items-center justify-center text-[#9B8C83] hover:text-[#3F312B] hover:bg-[#EEDFD4] transition-all"
+              aria-label="Clear style filter"
+            >
+              ×
+            </button>
+          </span>
+        </div>
+      )}
 
       {/* Loading skeleton */}
       {loading && (
@@ -226,7 +243,7 @@ const Products = () => {
           )}
         </>
       )}
-    </div>
+      </div>
     </div>
   );
 };

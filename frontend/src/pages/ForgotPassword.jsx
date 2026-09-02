@@ -11,6 +11,7 @@ export default function ForgotPassword() {
   const [email, setEmail]     = useState(searchParams.get('email') || '');
   const [loading, setLoading] = useState(false);
   const [error, setError]     = useState('');
+  const [errorCode, setErrorCode] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,11 +21,13 @@ export default function ForgotPassword() {
 
     setLoading(true);
     setError('');
+    setErrorCode('');
     try {
       await forgotPassword(trimmed);
-      // Always navigate — the backend always returns generic success
       navigate(`/verify-reset-otp?email=${encodeURIComponent(trimmed)}`);
     } catch (err) {
+      const code = err.response?.data?.code || '';
+      setErrorCode(code);
       setError(err.response?.data?.message || 'Something went wrong. Please try again.');
     } finally {
       setLoading(false);
@@ -56,8 +59,25 @@ export default function ForgotPassword() {
         </div>
 
         {error && (
-          <div className="mb-5 p-4 bg-red-50 border border-red-200/60 text-red-600 text-sm rounded-2xl font-medium">
+          <div className={`mb-5 p-4 border text-sm rounded-2xl font-medium ${
+            errorCode === 'GOOGLE_ACCOUNT_ONLY'
+              ? 'bg-blue-50 border-blue-200/60 text-blue-700'
+              : 'bg-red-50 border-red-200/60 text-red-600'
+          }`}>
             {error}
+            {errorCode === 'GOOGLE_ACCOUNT_ONLY' && (
+              <span className="block mt-1">
+                Go back and use{' '}
+                <button
+                  type="button"
+                  onClick={() => navigate('/login')}
+                  className="underline font-bold hover:opacity-80"
+                >
+                  Sign in with Google
+                </button>
+                .
+              </span>
+            )}
           </div>
         )}
 
@@ -71,7 +91,7 @@ export default function ForgotPassword() {
               <input
                 type="email"
                 value={email}
-                onChange={e => { setEmail(e.target.value); setError(''); }}
+                onChange={e => { setEmail(e.target.value); setError(''); setErrorCode(''); }}
                 placeholder="name@example.com"
                 autoFocus
                 autoComplete="email"

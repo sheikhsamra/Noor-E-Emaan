@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import API from '../../api/axios';
 import { useToast } from '../../context/ToastContext';
 import {
@@ -8,12 +8,23 @@ import {
   HiOutlineXMark,
   HiOutlineMagnifyingGlass,
   HiOutlinePhoto,
+  HiOutlineCloudArrowUp,
 } from 'react-icons/hi2';
 
-const CATEGORIES = ['Abaya', 'Hijab', 'Niqab', 'Prayer Set', 'Quran', 'Islamic Books', 'Attar', 'Kids', 'Men', 'Accessories', 'Other'];
+const CATEGORIES = ['Abaya', 'Hijab', 'Niqab', 'Prayer Set', 'Islamic Books', 'Fragrances', 'Kids', 'Men', 'Topi', 'Accessories', 'Other'];
+
+// Style/sub-category options per category — must match the navbar dropdown labels
+const SUBCATEGORIES = {
+  Abaya:      ['Open Abaya', 'Butterfly Abaya', 'Embroidered Abaya', 'Ombre Abaya'],
+  Hijab:      ['Chiffon Scarf', 'Jersey Hijab', 'Shayla', 'Khimar', 'Pashmina Shawl', 'Instant Hijab'],
+  Niqab:      ['Half Niqab', 'Full Niqab', 'Magnetic Niqab', 'Niqab with Cap', 'Two-Layer Niqab'],
+  'Prayer Set': ['Jainamaz', 'Prayer Cap', 'Tasbih', 'Velvet Prayer Mat', 'Travel Prayer Mat', 'Complete Set'],
+  Fragrances: ['Attar', 'Oud', 'Bukhoor', 'Rose Musk', 'Amber Collection'],
+  Men:        ['Jubba / Thobe', 'Saudi Style Thobe', 'Embroidered Jubba', 'Cotton Jubba'],
+};
 
 const EMPTY = {
-  name: '', category: '', price: '', discountPrice: '', stock: '', description: '',
+  name: '', category: '', subCategory: '', price: '', discountPrice: '', stock: '', description: '',
   images: [''],
 };
 
@@ -32,7 +43,35 @@ export default function AdminProducts() {
   const [form, setForm]         = useState(EMPTY);
   const [editId, setEditId]     = useState(null);
   const [saving, setSaving]     = useState(false);
-  const [deleteId, setDeleteId] = useState(null);
+  const [deleteId, setDeleteId]     = useState(null);
+  const [uploadingIdx, setUploadingIdx] = useState(null);
+  const fileInputRef   = useRef(null);
+  const uploadSlotRef  = useRef(null);
+
+  const triggerUpload = (idx) => {
+    uploadSlotRef.current = idx;
+    fileInputRef.current.value = '';
+    fileInputRef.current.click();
+  };
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const idx = uploadSlotRef.current;
+    setUploadingIdx(idx);
+    try {
+      const fd = new FormData();
+      fd.append('image', file);
+      const res = await API.post('/upload', fd, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+      setImg(idx, res.data.url);
+    } catch {
+      showToast('Image upload failed. Try again.', 'error');
+    } finally {
+      setUploadingIdx(null);
+    }
+  };
 
   const fetchProducts = () => {
     setLoading(true);
@@ -54,6 +93,7 @@ export default function AdminProducts() {
     setForm({
       name:          p.name         || '',
       category:      p.category     || '',
+      subCategory:   p.subCategory  || '',
       price:         p.price        ?? '',
       discountPrice: p.discountPrice ?? '',
       stock:         p.stock        ?? '',
@@ -73,6 +113,7 @@ export default function AdminProducts() {
       const payload = {
         name:        form.name.trim(),
         category:    form.category.trim(),
+        subCategory: form.subCategory.trim(),
         price:       Number(form.price),
         stock:       Number(form.stock),
         description: form.description.trim(),
@@ -193,6 +234,9 @@ export default function AdminProducts() {
                           <span className="px-2.5 py-1 rounded-full bg-[#F7F2EC] text-[#8A5A44] text-[10px] font-black uppercase tracking-widest border border-[#E8DDD1]">
                             {p.category}
                           </span>
+                          {p.subCategory && (
+                            <p className="text-[10px] text-[#9B8C83] font-medium mt-1">{p.subCategory}</p>
+                          )}
                         </td>
                         <td className="px-5 py-3.5">
                           {p.discountPrice ? (
@@ -273,12 +317,23 @@ export default function AdminProducts() {
 
             <div>
               <label className={labelCls}>Category *</label>
-              <select value={form.category} onChange={e => setForm(f => ({...f, category: e.target.value}))}
+              <select value={form.category} onChange={e => setForm(f => ({...f, category: e.target.value, subCategory: ''}))}
                 required className={inputCls}>
                 <option value="">Select category</option>
                 {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
+
+            {SUBCATEGORIES[form.category] && (
+              <div>
+                <label className={labelCls}>Style</label>
+                <select value={form.subCategory} onChange={e => setForm(f => ({...f, subCategory: e.target.value}))}
+                  className={inputCls}>
+                  <option value="">No specific style</option>
+                  {SUBCATEGORIES[form.category].map(s => <option key={s} value={s}>{s}</option>)}
+                </select>
+              </div>
+            )}
 
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -306,37 +361,78 @@ export default function AdminProducts() {
                 className={`${inputCls} resize-none`} />
             </div>
 
-            {/* Image URLs */}
+            {/* Images */}
             <div>
-              <label className={labelCls}>Image URLs</label>
-              <div className="space-y-2.5">
+              <label className={labelCls}>Product Images</label>
+
+              {/* Hidden file input — shared across all slots */}
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleFileChange}
+              />
+
+              <div className="space-y-3">
                 {form.images.map((url, idx) => (
-                  <div key={idx} className="flex gap-2 items-start">
-                    {/* Tiny preview */}
-                    <div className="h-10 w-10 rounded-xl overflow-hidden bg-[#F7F2EC] border border-[#E8DDD1] flex-shrink-0 flex items-center justify-center">
-                      {url.trim()
-                        ? <img src={url} alt="" className="h-full w-full object-cover" onError={e => { e.target.style.display='none'; }} />
-                        : <HiOutlinePhoto className="text-[#C5B9B0] text-lg" />}
+                  <div key={idx} className="rounded-2xl border border-[#E8DDD1] bg-white overflow-hidden">
+                    {/* Preview area */}
+                    <div
+                      className="relative h-36 bg-[#F7F2EC] flex items-center justify-center cursor-pointer group"
+                      onClick={() => triggerUpload(idx)}
+                    >
+                      {url.trim() ? (
+                        <img
+                          src={url}
+                          alt=""
+                          className="h-full w-full object-contain"
+                          onError={e => { e.target.style.display = 'none'; }}
+                        />
+                      ) : null}
+
+                      {/* Overlay — always visible when empty, on-hover when image set */}
+                      <div className={`absolute inset-0 flex flex-col items-center justify-center gap-2 transition-all duration-200
+                        ${url.trim()
+                          ? 'bg-black/0 group-hover:bg-black/40 opacity-0 group-hover:opacity-100'
+                          : 'bg-transparent opacity-100'}`}>
+                        {uploadingIdx === idx ? (
+                          <div className="w-7 h-7 border-2 border-[#8A5A44]/30 border-t-[#8A5A44] rounded-full animate-spin" />
+                        ) : (
+                          <>
+                            <HiOutlineCloudArrowUp className={`text-3xl ${url.trim() ? 'text-white' : 'text-[#C5B9B0]'}`} />
+                            <span className={`text-xs font-black uppercase tracking-widest ${url.trim() ? 'text-white' : 'text-[#B8AAA0]'}`}>
+                              {url.trim() ? 'Change Image' : 'Click to Upload'}
+                            </span>
+                          </>
+                        )}
+                      </div>
                     </div>
-                    <input
-                      value={url}
-                      onChange={e => setImg(idx, e.target.value)}
-                      placeholder="https://res.cloudinary.com/..."
-                      className={`${inputCls} flex-1`}
-                    />
-                    {form.images.length > 1 && (
-                      <button type="button" onClick={() => removeImg(idx)}
-                        className="h-10 w-10 rounded-xl bg-red-50 border border-red-200 flex items-center justify-center text-red-400 hover:bg-red-100 transition-all flex-shrink-0">
-                        <HiOutlineXMark className="text-base" />
-                      </button>
-                    )}
+
+                    {/* URL input row */}
+                    <div className="flex items-center gap-2 px-3 py-2 border-t border-[#F0EBE5]">
+                      <HiOutlinePhoto className="text-[#C5B9B0] text-base flex-shrink-0" />
+                      <input
+                        value={url}
+                        onChange={e => setImg(idx, e.target.value)}
+                        placeholder="Or paste image URL…"
+                        className="flex-1 bg-transparent text-xs text-[#6F5E55] placeholder:text-[#C5B9B0] outline-none font-medium py-1"
+                      />
+                      {form.images.length > 1 && (
+                        <button type="button" onClick={() => removeImg(idx)}
+                          className="h-6 w-6 rounded-lg bg-red-50 border border-red-200 flex items-center justify-center text-red-400 hover:bg-red-100 transition-all flex-shrink-0">
+                          <HiOutlineXMark className="text-xs" />
+                        </button>
+                      )}
+                    </div>
                   </div>
                 ))}
+
                 <button
                   type="button" onClick={addImg}
                   className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border-2 border-dashed border-[#D8B9A5] text-[#8A5A44] text-xs font-black uppercase tracking-widest hover:border-[#8A5A44] hover:bg-[#F7F2EC] transition-all"
                 >
-                  <HiOutlinePlus /> Add Image URL
+                  <HiOutlinePlus /> Add Another Image
                 </button>
               </div>
             </div>

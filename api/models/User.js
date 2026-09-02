@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema({
   wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
 
   // ── Email verification ────────────────────────────────────────────
-  isEmailVerified:                { type: Boolean, default: true },
+  isEmailVerified:                { type: Boolean, default: false },
   emailVerificationOtpHash:       { type: String },
   emailVerificationOtpExpires:    { type: Date },
   emailVerificationOtpLastSentAt: { type: Date },
