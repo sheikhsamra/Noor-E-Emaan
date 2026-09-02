@@ -16,10 +16,11 @@ const NAV_ITEMS = [
     label: 'Abaya',
     href: '/products?category=Abaya',
     sub: [
-      { label: 'Open Abaya',        href: '/products?category=Abaya&subCategory=Open Abaya'        },
-      { label: 'Butterfly Abaya',   href: '/products?category=Abaya&subCategory=Butterfly Abaya'   },
-      { label: 'Embroidered Abaya', href: '/products?category=Abaya&subCategory=Embroidered Abaya' },
-      { label: 'Ombre Abaya',       href: '/products?category=Abaya&subCategory=Ombre Abaya'       },
+      { label: 'Open Abaya',              href: '/products?category=Abaya&subCategory=Open Abaya'              },
+      { label: 'Butterfly Abaya',         href: '/products?category=Abaya&subCategory=Butterfly Abaya'         },
+      { label: 'Embroidered Abaya',       href: '/products?category=Abaya&subCategory=Embroidered Abaya'       },
+      { label: 'Ombre Abaya',             href: '/products?category=Abaya&subCategory=Ombre Abaya'             },
+      { label: 'Pleated / Crepe Maxi Abaya', href: '/products?category=Abaya&subCategory=Pleated / Crepe Maxi Abaya' },
     ],
   },
   {

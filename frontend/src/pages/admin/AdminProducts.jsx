@@ -15,7 +15,7 @@ const CATEGORIES = ['Abaya', 'Hijab', 'Niqab', 'Prayer Set', 'Islamic Books', 'F
 
 // Style/sub-category options per category — must match the navbar dropdown labels
 const SUBCATEGORIES = {
-  Abaya:      ['Open Abaya', 'Butterfly Abaya', 'Embroidered Abaya', 'Ombre Abaya'],
+  Abaya:      ['Open Abaya', 'Butterfly Abaya', 'Embroidered Abaya', 'Ombre Abaya', 'Pleated / Crepe Maxi Abaya'],
   Hijab:      ['Chiffon Scarf', 'Jersey Hijab', 'Shayla', 'Khimar', 'Pashmina Shawl', 'Instant Hijab'],
   Niqab:      ['Half Niqab', 'Full Niqab', 'Magnetic Niqab', 'Niqab with Cap', 'Two-Layer Niqab'],
   'Prayer Set': ['Jainamaz', 'Prayer Cap', 'Tasbih', 'Velvet Prayer Mat', 'Travel Prayer Mat', 'Complete Set'],
