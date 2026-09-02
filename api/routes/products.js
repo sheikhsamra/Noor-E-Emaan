@@ -46,7 +46,7 @@ router.get("/", async (req, res) => {
     const sortBy = sortMap[sort] || sortMap.newest;
 
     const pageNum = Math.max(1, parseInt(page) || 1);
-    const limitNum = Math.min(50, Math.max(1, parseInt(limit) || 12));
+    const limitNum = Math.min(200, Math.max(1, parseInt(limit) || 12));
     const skip = (pageNum - 1) * limitNum;
 
     const [products, totalProducts] = await Promise.all([

@@ -66,7 +66,7 @@ export default function Footer() {
           <div>
             <h4 className="text-xs font-black uppercase tracking-[0.3em] text-[#8A5A44] mb-5">Collections</h4>
             <ul className="space-y-3">
-              {['Abaya', 'Jubba', 'Topi', 'Tasbih', 'Jainamaz', 'Fragrances', 'Books'].map((cat) => (
+              {['Abaya', 'Hijab', 'Prayer Set', 'Fragrances', 'Men', 'Islamic Books'].map((cat) => (
                 <li key={cat}>
                   <Link to={`/categories?category=${cat}`}
                     className="text-[#6F5E55] hover:text-[#8A5A44] text-sm font-medium transition-colors duration-200 flex items-center gap-2 group">

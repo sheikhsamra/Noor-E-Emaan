@@ -11,16 +11,15 @@ import {
   HiOutlineCloudArrowUp,
 } from 'react-icons/hi2';
 
-const CATEGORIES = ['Abaya', 'Hijab', 'Niqab', 'Prayer Set', 'Islamic Books', 'Fragrances', 'Kids', 'Men', 'Topi', 'Accessories', 'Other'];
+const CATEGORIES = ['Abaya', 'Hijab', 'Prayer Set', 'Islamic Books', 'Fragrances', 'Kids', 'Men', 'Other'];
 
 // Style/sub-category options per category — must match the navbar dropdown labels
 const SUBCATEGORIES = {
   Abaya:      ['Open Abaya', 'Butterfly Abaya', 'Embroidered Abaya', 'Ombre Abaya', 'Pleated / Crepe Maxi Abaya'],
-  Hijab:      ['Chiffon Scarf', 'Jersey Hijab', 'Shayla', 'Khimar', 'Pashmina Shawl', 'Instant Hijab'],
-  Niqab:      ['Half Niqab', 'Full Niqab', 'Magnetic Niqab', 'Niqab with Cap', 'Two-Layer Niqab'],
-  'Prayer Set': ['Jainamaz', 'Prayer Cap', 'Tasbih', 'Velvet Prayer Mat', 'Travel Prayer Mat', 'Complete Set'],
-  Fragrances: ['Attar', 'Oud', 'Bukhoor', 'Rose Musk', 'Amber Collection'],
-  Men:        ['Jubba / Thobe', 'Saudi Style Thobe', 'Embroidered Jubba', 'Cotton Jubba'],
+  Hijab:      ['Chiffon Scarf', 'Jersey Hijab', 'Khimar', 'Pashmina Shawl', 'Niqab', 'Cap', 'Hand Gloves'],
+  'Prayer Set': ['Jainamaz', 'Prayer Cap', 'Tasbih', 'Velvet Prayer Mat', 'Complete Set', 'Couple Set'],
+  Fragrances: ['Attar', 'Oud', 'Perfumes'],
+  Men:        ['Jubba / Thobe', 'Kurta'],
 };
 
 const EMPTY = {
@@ -38,6 +37,10 @@ export default function AdminProducts() {
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading]   = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [page, setPage]         = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalProducts, setTotalProducts] = useState(0);
   const [search, setSearch]     = useState('');
   const [panelOpen, setPanelOpen] = useState(false);
   const [form, setForm]         = useState(EMPTY);
@@ -73,12 +76,31 @@ export default function AdminProducts() {
     }
   };
 
+  const PAGE_SIZE = 50;
+
   const fetchProducts = () => {
     setLoading(true);
-    API.get('/products?limit=100&sort=newest')
-      .then(r => setProducts(r.data.products || []))
+    API.get(`/products?limit=${PAGE_SIZE}&page=1&sort=newest`)
+      .then(r => {
+        setProducts(r.data.products || []);
+        setPage(1);
+        setTotalPages(r.data.pagination?.totalPages || 1);
+        setTotalProducts(r.data.pagination?.totalProducts || 0);
+      })
       .catch(() => showToast('Failed to load products', 'error'))
       .finally(() => setLoading(false));
+  };
+
+  const loadMore = () => {
+    const nextPage = page + 1;
+    setLoadingMore(true);
+    API.get(`/products?limit=${PAGE_SIZE}&page=${nextPage}&sort=newest`)
+      .then(r => {
+        setProducts(prev => [...prev, ...(r.data.products || [])]);
+        setPage(nextPage);
+      })
+      .catch(() => showToast('Failed to load more products', 'error'))
+      .finally(() => setLoadingMore(false));
   };
 
   useEffect(fetchProducts, []);
@@ -173,7 +195,9 @@ export default function AdminProducts() {
         <div className="flex items-center justify-between gap-4 flex-wrap">
           <div>
             <h1 className="text-3xl font-black text-[#27211E] tracking-tight">Products</h1>
-            <p className="text-[#9B8C83] font-medium mt-1 text-sm">{products.length} products in catalogue</p>
+            <p className="text-[#9B8C83] font-medium mt-1 text-sm">
+              Showing {products.length} of {totalProducts} products
+            </p>
           </div>
           <button
             onClick={openAdd}
@@ -278,6 +302,26 @@ export default function AdminProducts() {
             )}
           </div>
         </div>
+
+        {/* Load more */}
+        {!loading && !search && page < totalPages && (
+          <div className="flex justify-center pt-2">
+            <button
+              onClick={loadMore}
+              disabled={loadingMore}
+              className="flex items-center gap-2 bg-white border-2 border-[#E8DDD1] hover:border-[#8A5A44] text-[#3F312B] hover:text-[#8A5A44] font-black px-6 py-3 rounded-2xl transition-all text-sm uppercase tracking-widest disabled:opacity-50"
+            >
+              {loadingMore ? (
+                <>
+                  <span className="w-4 h-4 border-2 border-[#E8DDD1] border-t-[#8A5A44] rounded-full animate-spin" />
+                  Loading…
+                </>
+              ) : (
+                `Load More (${totalProducts - products.length} remaining)`
+              )}
+            </button>
+          </div>
+        )}
       </div>
 
       {/* ── Add/Edit slide panel ── */}

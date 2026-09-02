@@ -6,7 +6,7 @@ import AnimateOnScroll from '../components/AnimateOnScroll';
 import API from '../api/axios';
 import { HiOutlineMagnifyingGlass } from 'react-icons/hi2';
 
-const CATEGORIES = ['All', 'Abaya', 'Hijab', 'Niqab', 'Prayer Set', 'Islamic Books', 'Fragrances', 'Kids', 'Men', 'Topi', 'Accessories', 'Other'];
+const CATEGORIES = ['All', 'Abaya', 'Hijab', 'Prayer Set', 'Islamic Books', 'Fragrances', 'Kids', 'Men', 'Other'];
 
 const Products = () => {
   const { search: urlSearch } = useLocation();

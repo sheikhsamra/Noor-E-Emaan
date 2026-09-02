@@ -29,21 +29,11 @@ const NAV_ITEMS = [
     sub: [
       { label: 'Chiffon Scarf',  href: '/products?category=Hijab&subCategory=Chiffon Scarf'  },
       { label: 'Jersey Hijab',   href: '/products?category=Hijab&subCategory=Jersey Hijab'   },
-      { label: 'Shayla',         href: '/products?category=Hijab&subCategory=Shayla'         },
       { label: 'Khimar',         href: '/products?category=Hijab&subCategory=Khimar'         },
       { label: 'Pashmina Shawl', href: '/products?category=Hijab&subCategory=Pashmina Shawl' },
-      { label: 'Instant Hijab',  href: '/products?category=Hijab&subCategory=Instant Hijab'  },
-    ],
-  },
-  {
-    label: 'Niqab',
-    href: '/products?category=Niqab',
-    sub: [
-      { label: 'Half Niqab',     href: '/products?category=Niqab&subCategory=Half Niqab'      },
-      { label: 'Full Niqab',     href: '/products?category=Niqab&subCategory=Full Niqab'      },
-      { label: 'Magnetic Niqab', href: '/products?category=Niqab&subCategory=Magnetic Niqab'  },
-      { label: 'Niqab with Cap', href: '/products?category=Niqab&subCategory=Niqab with Cap'  },
-      { label: 'Two-Layer Niqab',href: '/products?category=Niqab&subCategory=Two-Layer Niqab' },
+      { label: 'Niqab',          href: '/products?category=Hijab&subCategory=Niqab'          },
+      { label: 'Cap',            href: '/products?category=Hijab&subCategory=Cap'            },
+      { label: 'Hand Gloves',    href: '/products?category=Hijab&subCategory=Hand Gloves'    },
     ],
   },
   {
@@ -54,38 +44,32 @@ const NAV_ITEMS = [
       { label: 'Prayer Cap',        href: '/products?category=Prayer Set&subCategory=Prayer Cap'        },
       { label: 'Tasbih',            href: '/products?category=Prayer Set&subCategory=Tasbih'            },
       { label: 'Velvet Prayer Mat', href: '/products?category=Prayer Set&subCategory=Velvet Prayer Mat' },
-      { label: 'Travel Prayer Mat', href: '/products?category=Prayer Set&subCategory=Travel Prayer Mat' },
       { label: 'Complete Set',      href: '/products?category=Prayer Set&subCategory=Complete Set'      },
+      { label: 'Couple Set',        href: '/products?category=Prayer Set&subCategory=Couple Set'        },
     ],
   },
   {
     label: 'Fragrances',
     href: '/products?category=Fragrances',
     sub: [
-      { label: 'Attar',            href: '/products?category=Fragrances&subCategory=Attar'            },
-      { label: 'Oud',              href: '/products?category=Fragrances&subCategory=Oud'              },
-      { label: 'Bukhoor',          href: '/products?category=Fragrances&subCategory=Bukhoor'          },
-      { label: 'Rose Musk',        href: '/products?category=Fragrances&subCategory=Rose Musk'        },
-      { label: 'Amber Collection', href: '/products?category=Fragrances&subCategory=Amber Collection' },
+      { label: 'Attar',    href: '/products?category=Fragrances&subCategory=Attar'    },
+      { label: 'Oud',      href: '/products?category=Fragrances&subCategory=Oud'      },
+      { label: 'Perfumes', href: '/products?category=Fragrances&subCategory=Perfumes' },
     ],
   },
   {
     label: 'Men',
     href: '/products?category=Men',
     sub: [
-      { label: 'Jubba / Thobe',     href: '/products?category=Men&subCategory=Jubba / Thobe'     },
-      { label: 'Saudi Style Thobe', href: '/products?category=Men&subCategory=Saudi Style Thobe' },
-      { label: 'Embroidered Jubba', href: '/products?category=Men&subCategory=Embroidered Jubba' },
-      { label: 'Cotton Jubba',      href: '/products?category=Men&subCategory=Cotton Jubba'      },
+      { label: 'Jubba / Thobe', href: '/products?category=Men&subCategory=Jubba / Thobe' },
+      { label: 'Kurta',         href: '/products?category=Men&subCategory=Kurta'         },
     ],
   },
 ];
 
 const MORE_ITEMS = [
   { label: 'Islamic Books', href: '/products?category=Islamic Books' },
-  { label: 'Topi',          href: '/products?category=Topi' },
   { label: 'Kids',          href: '/products?category=Kids' },
-  { label: 'Accessories',   href: '/products?category=Accessories' },
   { label: 'Other',         href: '/products?category=Other' },
 ];
 

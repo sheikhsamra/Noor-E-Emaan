@@ -8,14 +8,11 @@ import API from '../api/axios';
 const CATEGORIES = [
   { name: 'Abaya',         icon: '👗', desc: 'Elegant modest fashion'       },
   { name: 'Hijab',         icon: '🧕', desc: 'Scarves, shawls & covers'     },
-  { name: 'Niqab',         icon: '✨', desc: 'Face veils & niqab sets'      },
   { name: 'Prayer Set',    icon: '🕌', desc: 'Jainamaz, tasbih & essentials'},
   { name: 'Islamic Books', icon: '📚', desc: 'Quran, hadith & Islamic literature' },
   { name: 'Fragrances',    icon: '🌸', desc: 'Attar, oud & bukhoor'        },
   { name: 'Kids',          icon: '🧒', desc: 'Islamic wear for children'    },
   { name: 'Men',           icon: '👔', desc: 'Thobes & men\'s wear'        },
-  { name: 'Topi',          icon: '🎩', desc: 'Prayer caps & kufi'          },
-  { name: 'Accessories',   icon: '📿', desc: 'Tasbih, rings & more'        },
   { name: 'Other',         icon: '🛍️', desc: 'More Islamic products'       },
 ];
 
